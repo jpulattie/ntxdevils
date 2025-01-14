@@ -3,14 +3,15 @@ CREATE DATABASE IF NOT EXISTS team_database;
 USE team_database;
 
 CREATE TABLE IF NOT EXISTS program(
-    id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY
+    id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
+    program_name VARCHAR(225)
 );
 
 CREATE TABLE IF NOT EXISTS team(
     id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
     team_name VARCHAR(225) NOT NULL,
     program_id INT NOT NULL,
-    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS info(
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS info(
     info_title VARCHAR(225),
     info_description TEXT,
     info_link TEXT,
-    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE
 
 );
 
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS announcements(
     program_id INT NOT NULL,
     announcement_title VARCHAR(225),
     announcement TEXT,
-    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS roster(
@@ -40,7 +41,7 @@ CREATE TABLE IF NOT EXISTS roster(
     year_playing INT,
     bio TEXT,
     picture_url TEXT,
-    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
 );
 
 -- intersection table between TEAM and EVENTS 
@@ -49,7 +50,7 @@ CREATE TABLE IF NOT EXISTS schedule(
     event_id INT NOT NULL,
     PRIMARY KEY (team_id, event_id),
     FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE,
-    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS event(
@@ -66,7 +67,7 @@ CREATE TABLE IF NOT EXISTS event(
     opponent VARCHAR(225),
     team_score INT,
     opponent_score INT,
-    result VARCHAR(225),
+    result VARCHAR(225)
 );
 
 CREATE TABLE IF NOT EXISTS sponsor(
@@ -78,24 +79,23 @@ CREATE TABLE IF NOT EXISTS sponsor(
     sponsor_website VARCHAR(225),
     sponsor_phone VARCHAR(225),
     sponsor_bio TEXT,
-    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE
 );
 
---intersection table between photo and all possible descriptors/tags from a photo
 CREATE TABLE IF NOT EXISTS photo_intersection(
     id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
     photo_id INT NOT NULL,
     team_id INT,
-    roster_id VARCHAR(225),
+    roster_id INT,
     event_id INT,
     FOREIGN KEY (photo_id) REFERENCES photo(id) ON DELETE CASCADE,
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
     FOREIGN KEY (roster_id) REFERENCES roster(id) ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS photo(
     id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
-    photo_url TEXT NOT NULL,
+    photo_url TEXT NOT NULL
 
 );
