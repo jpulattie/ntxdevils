@@ -39,11 +39,18 @@ export default function Info() {
     }, []);
     return(
         <div>
-            <h1>Info</h1>
+            <h1><strong>Info</strong></h1>
             <ul>
                 {data && data.length > 0 ? (
-                    data.map((item, index) => (
-                        <li key={index}>{JSON.stringify(item)}</li>
+                    data
+                    .filter(item => item !== null && item !== undefined)
+                    .map((item, index) => (
+                        <li key={index}>
+                            <p><strong>{item.info_title}</strong>: {item.info_description}</p>
+                            {item.info_link ?
+                            <p><a href={`https://${item.info_link}`}>Link</a></p>
+                            : null}
+                        </li>
                     ))
                 ) : (<li>Loading...</li>)}
                 
