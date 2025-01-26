@@ -1,0 +1,33 @@
+imports
+
+export default function
+    data1, setData1 = [use effect]  -  (set data_to_display1, for example list of team names)
+    data2, setData2 = [use effect]  -  (set data to disply2, for example, rosters by team name)
+
+    let db_query 1 = '....     - build the sql calls needed
+    let db_query 2 = ' ...     - build any other sql calls needed
+
+    useEffect
+        - function to call and get data1, for example getNavBar() that sends db_query1 to get team info to display
+            ...build the func
+        - function to call and get data2, for example getRosters() that sends db_query2 to get team info to display
+            ...build the func
+
+        -call first function
+        -call second function
+    
+    function renderFunction1
+        ...JSX to display the first function's data1 using data.map
+
+    function renderFunction2
+        ...JSX to display the second function's data2 using data.map
+
+    return - return for the export default function calls the two render functions with JSX
+        <h2>{ renderFunction1 }</h2>
+        <h3>{ renderFunction2 }</h3>
+            ...this would likely be a list, table, or div and not h2/h3
+
+
+This structure should work for displaying a nav bar of all teams, with a default roster displayed below it.  
+Maybe use onClick or something in the navbar to render a new team data?
+when a different team is clicked it changes a variable in the sql call to change teams

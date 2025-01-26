@@ -1,4 +1,6 @@
-import Image from "next/image";
+'use client'
+
+import { useState, useEffect } from 'react'
 
 export default function Home() {
   return (
@@ -8,7 +10,7 @@ export default function Home() {
        
 
         <div>
-          <p>Deploy now
+          <p>About Page
           </p>
             
         </div>

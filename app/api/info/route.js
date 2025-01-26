@@ -1,10 +1,10 @@
 const mysql2 =require('mysql2')
 
 const db = mysql2.createPool({
-    host: "localhost",
-    user: "root",
+    host: process.env.DBHOST,
+    user: process.env.DBUSER,
     password: process.env.DBPASS,
-    database: "team_database"
+    database: process.env.DBDATABASE
 });
 
 
@@ -22,7 +22,7 @@ export async function POST (request) {
         let message = [1,2,3,4,5];
         console.log(message)
     
-        return new Response(JSON.stringify({ results }, ), {
+        return new Response(JSON.stringify({ results }), {
           status: 201,
           headers: {
             "Content-Type": "application/json",

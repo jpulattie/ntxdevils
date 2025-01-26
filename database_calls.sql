@@ -69,3 +69,23 @@ set info_title = 'new title xyz',
     info_link = 'new link xyz'
 where id = info id;
 
+
+
+--insert new player
+insert into roster(team_id, player_name, position, grade, year_playing, bio, picture_url) 
+values ( xyzINT, 'player_name', 'position', 'grade', year_playingINT, 'bio', 'picture_url')
+
+--View Roster page
+select
+    team.team_name,
+    roster.player_name,
+    roster.position,
+    roster.year_playing,
+    roster.bio,
+    roster.picture_url
+from
+    roster
+left outer join
+    team
+on
+    roster.team_id = team.id

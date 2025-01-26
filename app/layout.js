@@ -53,9 +53,9 @@ export default function RootLayout({ children }) {
                     />
           </div>
           <nav className="row-start-2 gap-1 col-span-6 grid cols-1 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 container m-auto bg-primroseYellow text-myrtleGreen text-base">
-            <Link className="col-span-1" href="/rosters">Rosters</Link>
+            <Link className="col-span-1" href="/teams">Teams</Link>
             <Link className="col-span-1" href="/schedules">Schedules</Link>
-            <Link className="col-span-1" href="/info">Info/About</Link>
+            <Link className="col-span-1" href="/info">Info</Link>
             <Link className="col-span-1" href="/photos">Photos</Link>
             <Link className="col-span-1" href="/sponsors">Sponsors</Link> 
             <Link className="col-span-1 text-responsive" href="/">Announcements</Link>
