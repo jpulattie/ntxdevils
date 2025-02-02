@@ -48,7 +48,7 @@ order by
     async function get_roster () {
         try {
             console.log('teamChoice = ', teamChoice);
-            if (teamChoice !== null){
+            if (teamChoice !== null && teamChoice !== 'All'){
                 query = get_team_roster_query;
             } else {query = get_roster_query };
             console.log('query:', query)
@@ -97,7 +97,7 @@ order by
                 
                 console.log('result:', result)
                 console.log('result.results:', result.results)
-                setTeams(result.results);
+                setTeams([...result.results, {team_name: "All"}]);
             } catch (error) {
                 console.log('Problem with data: ', teams)
                 console.error('error:', error);
@@ -122,7 +122,7 @@ order by
                         onClick={(e) => {
                             e.preventDefault();
                             setTeamChoice(item.team_name);
-                            get_roster(item.team_name);
+                            //get_roster(item.team_name);
                         }}
                         >{item.team_name}</Link>
                     ))): (<p>no teams available</p>)}

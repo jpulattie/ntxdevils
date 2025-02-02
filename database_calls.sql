@@ -89,3 +89,163 @@ left outer join
     team
 on
     roster.team_id = team.id
+
+--insert into schedule/event
+
+insert into event(
+    event_name,
+    event_type,
+    event_date,
+    event_time,
+    event_description,
+    event_address,
+    event_city,
+    event_state,
+    event_zip,
+    opponent,
+    team_score,
+    opponent_score,
+    result
+) values (
+    "event name",
+    "event type",
+    event_date_DATE_type,
+    event_time_TIME_type,
+    'event description',
+    'event address',
+    'event city',
+    'event state',
+    'event zip',
+    'opponent',
+    team_score_INT,
+    opponent_score_INT,
+    'result'
+)
+
+set @event_id = LAST_INSERT_ID();
+
+insert into schedule(team_id, event_id) values(pkXYZ, @event_id)
+
+--display schedules
+select
+    event.event_name,
+    event.event_type,
+    event.event_date,
+    event.event_time,
+    event.event_description,
+    event.event_address,
+    event.event_city,
+    event.event_state,
+    event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result
+from
+    event
+left outer join
+    schedule on event.id = schedule.event_id
+left outer join
+    team on schedule.team_id = team.id
+where
+    team.team_name = "${teamChoice}";
+
+--display all schedules
+select
+    event.event_name,
+    event.event_type,
+    event.event_date,
+    event.event_time,
+    event.event_description,
+    event.event_address,
+    event.event_city,
+    event.event_state,
+    event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result
+from
+    event
+left outer join
+    schedule on event.id = schedule.event_id
+left outer join
+    team on schedule.team_id = team.id;
+
+
+--- insert sponsor
+insert into sponsor (
+    program_id,
+    sponsor_name,
+    sponsor_level,
+    sponsor_address,
+    sponsor_website,
+    sponsor_phone,
+    sponsor_bio
+) values (
+    program_ID_INT,
+    'sponsor name',
+    'sponsor level',
+    'sponsor address',
+    'sponsor website',
+    'sponsor phone', 
+    'sponsor bio'
+)
+
+--insert into announcements
+insert into announcements 
+    (program_id, announcement) 
+values 
+    (program_id, 
+    "Title",
+    "announcement"
+    );
+
+
+--TEST AREA BELOW--
+
+insert into event(
+    event_name,
+    event_type,
+    event_date,
+    event_time,
+    event_description,
+    opponent
+
+) values (
+    'Men vs. Austin',
+    'Game',
+    '2025-04-28',
+    '11:00:00',
+    'Mens 18s game',
+    'Austin'
+);
+
+set @event_id = LAST_INSERT_ID();
+
+insert into schedule(team_id, event_id) values(4, @event_id);
+
+
+
+select
+    event.event_name,
+    event.event_type,
+    event.event_date,
+    event.event_time,
+    event.event_description,
+    event.event_address,
+    event.event_city,
+    event.event_state,
+    event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result
+from
+    event
+left outer join
+    schedule on event.id = schedule.event_id
+left outer join
+    team on schedule.team_id = team.id
+where
+    team.team_name = "Mens";

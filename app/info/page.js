@@ -48,7 +48,7 @@ export default function Info() {
                         <li key={index}>
                             <p><strong>{item.info_title}</strong>: {item.info_description}</p>
                             {item.info_link ?
-                            <p><a href={`https://${item.info_link}`}>Link</a></p>
+                            <p><a href={`https://${item.info_link}`} target="_blank">Link</a></p>
                             : null}
                         </li>
                     ))

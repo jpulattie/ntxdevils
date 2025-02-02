@@ -58,7 +58,7 @@ export default function RootLayout({ children }) {
             <Link className="col-span-1" href="/info">Info</Link>
             <Link className="col-span-1" href="/photos">Photos</Link>
             <Link className="col-span-1" href="/sponsors">Sponsors</Link> 
-            <Link className="col-span-1 text-responsive" href="/">Announcements</Link>
+            <Link className="col-span-1" href="/announcements">Announcements</Link>
           </nav>
 
       </header>
