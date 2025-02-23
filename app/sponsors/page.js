@@ -94,7 +94,7 @@ export default function Sponsors() {
                                     </tr>
                                 </React.Fragment>
                             ))
-                    ) : (<tr>Loading...</tr>)}
+                    ) : (<tr><td>Loading...</td></tr>)}
                 </tbody>
 
             </table>

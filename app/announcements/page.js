@@ -44,6 +44,7 @@ export default function Announcements() {
     return (
         <div>
             <h1><strong>Announcements</strong></h1>
+            <table>
             <tbody>
                     {data && data.length > 0 ? (
                         data
@@ -62,10 +63,11 @@ export default function Announcements() {
                                     </tr>
                                 </React.Fragment>
                             ))
-                    ) : (<tr>Loading...</tr>)}
+                    ) : (<tr><td>Loading...</td></tr>)}
                 
 
             </tbody>
+            </table>
         </div>
     )
 }

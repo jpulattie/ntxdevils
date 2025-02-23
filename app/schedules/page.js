@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import React from 'react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+
 
 export default function Schedule() {
     const [ teams, setTeams ] = useState([]);
@@ -172,8 +174,8 @@ where
                                             .filter(item => item !== null && item !== undefined)
                                             .map((item, index) => {
                                                 return (
-                                                    <>
-                                                        <tr key={index}>
+                                                    
+                                                    <tr key={`${item.player_name}-${index}`}>
                                                             <td>{item.event_name}</td>
                                                             <td>{item.event_type}</td>
                                                             <td>{item.event_date}</td>
@@ -185,7 +187,7 @@ where
                                                             <td>{item.opponent_score}</td>
                                                             <td>{item.result}</td>
                                                         </tr>
-                                                    </>
+                                                    
                                                 );
                                             });
                                     })()

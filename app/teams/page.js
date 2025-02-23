@@ -144,8 +144,8 @@ order by
                             .filter(item => item !== null && item !== undefined)
                             .map((item, index) => {
                                 return (
-                                    <>
-                                        <tr key={index}>
+                                    
+                                        <tr key={`${item.player_name}-${index}`}>
                                             <td>{item.team_name}</td>
                                             <td>{item.player_name}</td>
                                             <td>{item.position}</td>
@@ -153,7 +153,7 @@ order by
                                             <td>{item.bio}</td>
                                             <td>{item.picture_url}</td>
                                         </tr>
-                                    </>
+                                    
                                 );
                             });
                     })()

@@ -102,8 +102,8 @@ export default function Photos() {
     function render_teams() {
         return (
             <Listbox value={teamChoice} onChange={setTeamChoice} >
-                <ListboxButton className="text-primroseYellow bg-myrtleGreen text-base px-4 py-2">Select Team</ListboxButton>
-                <ListboxOptions anchor="bottom" text-primroseYellow bg-myrtleGreen text-base>
+                <ListboxButton className="text-white bg-myrtleGreen text-base px-4 py-2">Select Team</ListboxButton>
+                <ListboxOptions anchor="bottom" className="text-primroseYellow bg-myrtleGreen text-base">
                     {teams.map((item) => (
                         <ListboxOption key={item.team_name} value={item.team_name} className="cursor-pointer data-[focus]:bg-roseRed text-primroseYellow bg-myrtleGreen text-base px-4 py-2">
                             {item.team_name}
