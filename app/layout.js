@@ -2,6 +2,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Link from 'next/link';
 import Image from "next/image";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 
 
 const roboto = Roboto({
@@ -9,6 +10,27 @@ const roboto = Roboto({
   //subsets: ["latin"],
   weight: ["400","700"]
 });
+
+const pages = [
+  {
+    name: 'Teams',
+  },
+  {
+    name: 'Schedules',
+  },
+  {
+    name: 'Info',
+  },
+  {
+    name: 'Photos'
+  },
+  {
+    name: 'Sponsors'
+  },
+  {
+    name: 'About'
+  }
+]
 
 
 export const metadata = {
@@ -25,7 +47,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body
-        className="ml-[10%] mr-[10%] bg-white text-myrtleGreen text-center {`${roboto.variable} antialiased`}"
+        className={`ml-[10%] mr-[10%] bg-white text-myrtleGreen text-center ${roboto.variable} antialiased flex flex-col min-h-screen`}
       >
     
       <header className="grid grid-row-2 gap-1 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 container m-auto bg-myrtleGreen text-primroseYellow">
@@ -63,7 +85,7 @@ export default function RootLayout({ children }) {
 
       </header>
 
-        <main className="text-center grid grid-cols-1 grid-row-6 row-span-6 container m-auto bg-primroseYellow text-myrtleGreen">
+        <main className="flex-grow container m-auto text-center grid grid-cols-1 grid-row-6 row-span-6 text-myrtleGreen bg-white">
           {children}
         </main>
 
