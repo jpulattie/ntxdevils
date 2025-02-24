@@ -4,12 +4,14 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import React from 'react';
-//import AWS from 'aws-sdk';
+import { useTeam } from '../teamChoice'; 
+
 
 export default function Photos() {
     const [teams, setTeams] = useState([]);
+    const [ isExpanded, setIsExpanded ] = useState(false);
     const [schedule, setSchedule] = useState([]);
-    const [teamChoice, setTeamChoice] = useState(null);
+    const { teamChoice, setTeamChoice } = useTeam(null);
     const [eventChoice, setEventChoice] = useState(null);
     const [photos, setPhotos] = useState([]);
     const [ filteredPhotos, setFilteredPhotos] = useState([]);
@@ -20,11 +22,17 @@ export default function Photos() {
     let query;
     let get_teams_query = `select team_name from team;`
 
+    const imageClick = () => {
+        setIsExpanded(!isExpanded);
+    }
    
 
     console.log('team choice', teamChoice);
     useEffect(() => {
-        setTeamChoice(null);
+        console.log("team choice in photos", teamChoice)
+        //setTeamChoice();
+        console.log("team choice in photos", teamChoice)
+
     }, []);
 
     async function getPhotos() {
@@ -95,45 +103,31 @@ export default function Photos() {
         get_teams()
     }, []);
 
-    //console.log('teams2:', teams);
-    //console.log('schedules2:', schedule);
-
-
-    function render_teams() {
-        return (
-            <Listbox value={teamChoice} onChange={setTeamChoice} >
-                <ListboxButton className="text-white bg-myrtleGreen text-base px-4 py-2">Select Team</ListboxButton>
-                <ListboxOptions anchor="bottom" className="text-primroseYellow bg-myrtleGreen text-base">
-                    {teams.map((item) => (
-                        <ListboxOption key={item.team_name} value={item.team_name} className="cursor-pointer data-[focus]:bg-roseRed text-primroseYellow bg-myrtleGreen text-base px-4 py-2">
-                            {item.team_name}
-                        </ListboxOption>
-                    ))}
-                </ListboxOptions>
-
-            </Listbox>
-
-
-        )
-    };
 
     function render_photos() {
 
-        if (!photos) {
+        if (!photos || teamChoice === null) {
             console.log('phtos:', photos);
             return <div><h1>Loading...</h1></div>
-        } else if (teamChoice == null || teamChoice === "All") {
+        } else if (teamChoice === "All") {
             
             return (
                 <div>
-                    <h1>{teamChoice ? teamChoice : "All"}</h1>
-                    <div className="grid grid-cols-3 gap-4">
+                    <h1>{teamChoice}</h1>
+
+                    <div className="grid grid-cols-3 gap-4 relative">
+
                         {photos.map((item, index) => (
                             <div key={index} >
                                 <img 
                                     src={`https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`}
                                     alt={item.key}
-                                    className="w-full h-auto"
+                                    className={`w-full h-auto transition-transform ${
+                                    isExpanded
+                                    ? 'fixed top-0 left-0 w-full h-full object-contain z-50'
+                                    : 'cursor-pointer'
+                                    }`}
+                                    onClick={imageClick}
                                 />
 
                             </div>
@@ -148,17 +142,22 @@ export default function Photos() {
        
         return (
             <div>
-                <h1>{teamChoice ? teamChoice : "All"}</h1>
+                <h1>{teamChoice ? teamChoice : "All2"}</h1>
                 {filteredPhotos.length === 0 ? (
                     <h1>No photos to display</h1>
                 ) : (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4 relative">
                     {filteredPhotos.map((item, index) => (
                         <div key={index} >
                             <img 
                                 src={`https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`}
                                 alt={item.key}
-                                className="w-full h-auto"
+                                className={`w-full h-auto transition-transform ${
+                                    isExpanded
+                                    ? 'fixed top-0 left-0 w-full h-full object-contain z-50'
+                                    : 'cursor-pointer'
+                                    }`}
+                                    onClick={imageClick}
                             />
 
                         </div>
@@ -174,89 +173,9 @@ export default function Photos() {
 
     return (
         <div>
-            {render_teams()}
+            
             {render_photos()}
         </div>
 
     )
 }
-
-/*
- let get_photos_query = `select
-    event.event_name,
-    event.event_type,
-    event.event_date,
-    event.event_time,
-    event.event_description,
-    event.event_address,
-    event.event_city,
-    event.event_state,
-    event.event_zip,
-    event.opponent,
-    event.team_score,
-    event.opponent_score,
-    event.result
-from
-    event
-left outer join
-    schedule on event.id = schedule.event_id
-left outer join
-    team on schedule.team_id = team.id;`
-
-    let get_team_photos_query = `select
-    event.event_name,
-    event.event_type,
-    event.event_date,
-    event.event_time,
-    event.event_description,
-    event.event_address,
-    event.event_city,
-    event.event_state,
-    event.event_zip,
-    event.opponent,
-    event.team_score,
-    event.opponent_score,
-    event.result
-from
-    event
-left outer join
-    schedule on event.id = schedule.event_id
-left outer join
-    team on schedule.team_id = team.id
-where
-    team.team_name = "${teamChoice}";`
-
-    async function get_schedule() {
-        try {
-            console.log('teamChoice = ', teamChoice);
-            if (teamChoice !== null && teamChoice !== 'All') {
-
-                query = get_team_photos_query;
-            } else {
-                console.log('initial loading of all schedules')
-                query = get_photos_query;
-                console.log("TEAMCHOICE:", teamChoice)
-            };
-            //console.log('query:', query)
-            const response = await fetch('api/schedules/', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query })
-            });
-
-            if (!response.ok) {
-                console.log('error in response here')
-                throw new Error("Error response not ok")
-            }
-
-            const result = await response.json();
-
-            console.log('HERE')
-            console.log('result.results:', result.results)
-            setSchedule(result.results);
-        } catch (error) {
-            console.log('Problem with data: ', schedule)
-            console.error('error:', error);
-        }
-    }
-*/

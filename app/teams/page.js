@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import React from 'react';
+import { useTeam } from '../teamChoice'; 
+
 
 export default function Roster() {
-    const [ teams, setTeams ] = useState([]);
-    const [ roster, setRoster ] = useState([]);
-    const [teamChoice, setTeamChoice ] = useState(null);
+    const [teams, setTeams] = useState([]);
+    const [roster, setRoster] = useState([]);
     let query;
-    let get_teams_query = `select team_name from team;`
+    const { teamChoice, setTeamChoice } = useTeam(null);
 
     let get_roster_query = `select
     team.team_name,
@@ -45,16 +46,16 @@ where
 order by
     roster.player_name ASC;`
 
-    async function get_roster () {
+    async function get_roster() {
         try {
             console.log('teamChoice = ', teamChoice);
-            if (teamChoice !== null && teamChoice !== 'All'){
+            if (teamChoice !== null && teamChoice !== 'All') {
                 query = get_team_roster_query;
-            } else {query = get_roster_query };
+            } else { query = get_roster_query };
             console.log('query:', query)
             const response = await fetch('api/teams/', {
                 method: 'POST',
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ query })
             });
 
@@ -64,7 +65,7 @@ order by
             }
 
             const result = await response.json();
-            
+
 
             console.log('result.results:', result.results)
             setRoster(result.results);
@@ -73,114 +74,56 @@ order by
             console.error('error:', error);
         }
     }
-
-    useEffect(()=>{
-        get_roster()}, [teamChoice]);
-
-    useEffect(()=>{
-        async function get_teams () {
-            try {
-                let query = get_teams_query;
-                console.log('query:', query)
-                const response = await fetch('api/teams/', {
-                    method: 'POST',
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({ query })
-                });
-
-                if (!response.ok) {
-                    console.log('error in response here')
-                    throw new Error("Error response not ok")
-                }
-
-                const result = await response.json();
-                
-                console.log('result:', result)
-                console.log('result.results:', result.results)
-                setTeams([...result.results, {team_name: "All"}]);
-            } catch (error) {
-                console.log('Problem with data: ', teams)
-                console.error('error:', error);
-            }
-        }
-        get_teams()}, []);
-
-        console.log('teams2:', teams);
-        console.log('rosters2:', roster);
     
 
-    function render_teams () {
-        return (
-            <nav className="row-start-2 gap-1 col-span-6 grid cols-1 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 container m-auto text-primroseYellow bg-myrtleGreen text-base">
-                {teams && teams.length > 0 ? (
-                    teams
-                    .map((item, index) => (
-                        <Link 
-                        key={index}
-                        className="col-span-1" 
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setTeamChoice(item.team_name);
-                            //get_roster(item.team_name);
-                        }}
-                        >{item.team_name}</Link>
-                    ))): (<p>no teams available</p>)}
-                
-                
-          </nav> )};
+    useEffect(() => {
+        get_roster()
+    }, [teamChoice]);
 
-    function render_roster () {
+
+    function render_roster() {
         return (
-<div>
-        <h1><strong>Players</strong></h1>
-        <table>
-           
-            <tbody>
-                {roster && roster.length > 0 ? (
-                    (() => {
-                        let team = null; // Keep track of the current team
-                        return roster
-                            .filter(item => item !== null && item !== undefined)
-                            .map((item, index) => {
-                                return (
-                                    
-                                        <tr key={`${item.player_name}-${index}`}>
-                                            <td>{item.team_name}</td>
-                                            <td>{item.player_name}</td>
-                                            <td>{item.position}</td>
-                                            <td>{item.year_playing}</td>
-                                            <td>{item.bio}</td>
-                                            <td>{item.picture_url}</td>
-                                        </tr>
-                                    
-                                );
-                            });
-                    })()
-                ) : (
-                    <tr>
-                        <td colSpan="6">Loading...</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>
-    </div>
+            <div>
+                <h1><strong>Players</strong></h1>
+                <table>
+
+                    <tbody>
+                        {roster && roster.length > 0 ? (
+                            (() => {
+                                let team = null; // Keep track of the current team
+                                return roster
+                                    .filter(item => item !== null && item !== undefined)
+                                    .map((item, index) => {
+                                        return (
+
+                                            <tr key={`${item.player_name}-${index}`}>
+                                                <td>{item.team_name}</td>
+                                                <td>{item.player_name}</td>
+                                                <td>{item.position}</td>
+                                                <td>{item.year_playing}</td>
+                                                <td>{item.bio}</td>
+                                                <td>{item.picture_url}</td>
+                                            </tr>
+
+                                        );
+                                    });
+                            })()
+                        ) : (
+                            <tr>
+                                <td colSpan="6">Loading...</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         )
     };
-    
-        
-    
 
-// NEED TO ADD REACT FRAGMENT TO DISPLAY TEAM NAME DYNAMICALLY
-//ALSO MAYBE DISPLAY ANOTHER NAV THAT LISTS ALL TEAM NAMES AND DEFAULTS TO ONE?
 
-    
+    return (
+        <div>
+            {render_roster()}
+        </div>
 
-            return (
-                <div>
-                    {render_teams()}
-                    {render_roster()}
-                </div>
-    
-)
+    )
 }
