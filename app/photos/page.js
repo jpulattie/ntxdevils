@@ -10,6 +10,8 @@ import { useTeam } from '../teamChoice';
 export default function Photos() {
     const [teams, setTeams] = useState([]);
     const [ isExpanded, setIsExpanded ] = useState(false);
+    const [expandedImage, setExpandedImage] = useState(null);
+
     const [schedule, setSchedule] = useState([]);
     const { teamChoice, setTeamChoice } = useTeam(null);
     const [eventChoice, setEventChoice] = useState(null);
@@ -22,8 +24,13 @@ export default function Photos() {
     let query;
     let get_teams_query = `select team_name from team;`
 
-    const imageClick = () => {
+    const imageClick = (index) => {
         setIsExpanded(!isExpanded);
+
+        setExpandedImage(expandedImage === index ? null : index);
+    }
+    const imageExpand = (index) => {
+
     }
    
 
@@ -112,7 +119,7 @@ export default function Photos() {
         } else if (teamChoice === "All") {
             
             return (
-                <div>
+                <div className="w-full h-screen p-4 relative">
                     <h1>{teamChoice}</h1>
 
                     <div className="grid grid-cols-3 gap-4 relative">
@@ -123,11 +130,14 @@ export default function Photos() {
                                     src={`https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`}
                                     alt={item.key}
                                     className={`w-full h-auto transition-transform ${
-                                    isExpanded
-                                    ? 'fixed top-0 left-0 w-full h-full object-contain z-50'
+                                    expandedImage === index
+                                    ? 'absolute top-0 left-0 w-full h-full object-contain z-50'
                                     : 'cursor-pointer'
                                     }`}
-                                    onClick={imageClick}
+                                    onClick={() => 
+                                        imageClick(index)}
+                                        
+
                                 />
 
                             </div>
@@ -141,7 +151,7 @@ export default function Photos() {
     else if (teamChoice != null) {
        
         return (
-            <div>
+            <div className="w-full h-screen p-4 relative">
                 <h1>{teamChoice ? teamChoice : "All2"}</h1>
                 {filteredPhotos.length === 0 ? (
                     <h1>No photos to display</h1>
@@ -153,11 +163,11 @@ export default function Photos() {
                                 src={`https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`}
                                 alt={item.key}
                                 className={`w-full h-auto transition-transform ${
-                                    isExpanded
-                                    ? 'fixed top-0 left-0 w-full h-full object-contain z-50'
+                                    expandedImage === index
+                                    ? 'absolute top-0 left-0 w-full h-full object-contain z-50'
                                     : 'cursor-pointer'
                                     }`}
-                                    onClick={imageClick}
+                                    onClick={() => imageClick(index)}
                             />
 
                         </div>
