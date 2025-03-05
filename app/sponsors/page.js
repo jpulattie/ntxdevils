@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import React, { Fragment } from 'react';
+import Navbar from "../Navbar";
 
 
 export default function Sponsors() {
@@ -33,7 +34,7 @@ export default function Sponsors() {
 
             catch {
                 //console.error('error catch', Error)
-                console.log('problem - need to clean up error catching2')
+                console.log('problem - need to clean up error catching5')
                 console.log('data:', data)
             }
         }
@@ -42,6 +43,7 @@ export default function Sponsors() {
     }, []);
     return (
         <div>
+            <Navbar />
             <h1><strong>Sponsors</strong></h1>
             <table>
                 <thead>
@@ -63,7 +65,7 @@ export default function Sponsors() {
                                 <React.Fragment key={index}>
                                     <tr>
                                         {item.sponsor_photo ?
-                                            <td><img src="https://i.postimg.cc/1tgm9fS0/IMG-20240613-080951-610.jpg" alt="cat" /></td>
+                                            <td><img src={item.sponsor_photo} alt={`$[item.sponsor_name} photo`} /></td>
                                             : <td> </td>}
 
                                         {item.sponsor_name ?

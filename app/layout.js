@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from "next/image";
 import Navbar from "./Navbar";
 import { TeamProvider } from './teamChoice';
+import './globals.css';
+import {headers} from 'next/headers';
 
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 
@@ -18,7 +20,7 @@ const pages = [
   {
     name: 'Teams',
     link: "/teams"
-  },
+  }, 
   {
     name: 'Schedules',
     link: "/schedules"
@@ -51,15 +53,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
   return (
-    <html lang="en">
+    <html lang="en" >
       <head>
         <title>NTX Devils</title>
         <meta name="description" content="NTX Aussie Rules Football Club" />
         <link rel="icon" href="/favicon.ico" />
       </head>
+
       <body
-        className={`ml-[10%] mr-[10%] bg-white text-myrtleGreen text-center ${roboto.variable} antialiased flex flex-col min-h-screen`}
+        className={`ml-[min(10%,25%)] mr-[min(10%,25%)] text-myrtleGreen text-center ${roboto.variable} antialiased flex flex-col min-h-screen shadow-2xl shadow-myrtleGreen-99 rounded`}
       >
         <TeamProvider>
 
@@ -88,13 +92,15 @@ export default function RootLayout({ children }) {
                 priority
               />
             </div>
-            <Navbar />
           </header>
-          <main className="flex-grow container m-auto text-center grid grid-cols-1 grid-row-6 row-span-6 text-myrtleGreen bg-white">
+          <main className="flex-grow w-full m-auto text-center grid grid-cols-1 grid-row-6 row-span-6 text-myrtleGreen bg-white bg-opacity-70">
             {children}
           </main>
-          <footer className="grid grid-cols-1 grid-row-6 container m-auto bg-[#]">
+          <footer className="bg-white grid grid-cols-1 grid-row-6 container m-auto bg-[#]">
             <p>&copy; Josh Pulattie 2024</p>
+            <Link href="/loggedin" className="col-span-2 font-roboto text-lg text-4.5xl bg-myrtleGreen text-primroseYellow text-center">
+              Admin Login
+              </Link>
           </footer>
         </TeamProvider>
 

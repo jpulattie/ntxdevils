@@ -19,8 +19,8 @@ export async function POST (request) {
         console.log('results:', results);
         console.log('fields:', fields);
 
-        let message = [1,2,3,4,5];
-        console.log(message)
+        
+      
     
         return new Response(JSON.stringify({ results }), {
           status: 201,

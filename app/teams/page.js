@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { useTeam } from '../teamChoice'; 
+import Navbar from "../Navbar";
+
 
 
 export default function Roster() {
@@ -122,6 +124,7 @@ order by
 
     return (
         <div>
+            <Navbar />
             {render_roster()}
         </div>
 

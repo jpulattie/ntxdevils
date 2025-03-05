@@ -20,29 +20,7 @@ const s3 = new S3Client({
     },
 });
 
-/*
-export async function POST(request) {
-    const formData = new FormData();
-    const file = request.body.file;
 
-    const params = {
-        Bucket: bucketName,
-        Key: file.originalname,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-    };
-
-    try {
-        const data = await s3.upload(params).promise();
-        return NextResponse.json({ message: "file upload success", url: data.Location});
-
-    }
-
-    catch (error) {
-        return NextResponse.json({ error: error.message}, {status: 500})
-    }
-}
-*/
 export async function GET() {
     console.log("PHOTOS GET REQUEST MADE");
     try {

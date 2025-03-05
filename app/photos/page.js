@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { useTeam } from '../teamChoice'; 
+import Navbar from "../Navbar";
+
 
 
 export default function Photos() {
@@ -26,7 +28,6 @@ export default function Photos() {
 
     const imageClick = (index) => {
         setIsExpanded(!isExpanded);
-
         setExpandedImage(expandedImage === index ? null : index);
     }
     const imageExpand = (index) => {
@@ -34,13 +35,11 @@ export default function Photos() {
     }
    
 
-    console.log('team choice', teamChoice);
+    
     useEffect(() => {
         console.log("team choice in photos", teamChoice)
         //setTeamChoice();
-        console.log("team choice in photos", teamChoice)
-
-    }, []);
+    }, [teamChoice]);
 
     async function getPhotos() {
         console.log('PHOTOS CALLED')
@@ -49,28 +48,36 @@ export default function Photos() {
             const data = await response.json();
             const validPhotos = data.photos.filter(photo => photo.Size > 0)
             setPhotos(validPhotos);
-            console.log("Valid Photos:", validPhotos);
+            
             setBucketName(data.bucketName);
             setRegion(data.region);
-            console.log('data from photos:', data);
+            console.log('data from photos2:', data);
+            console.log("WTF IS GOING ON");
+
+            console.log("Valid Photo:", data.photos[5].Key);
+            data.photos.forEach((photo, index) => {
+                console.log(`Photo ${index} Key:`, photo.Key);
+            });
+            //console.log('team choice when photos called', teamChoice);
         }
         catch (error) {
             console.error('Error getting photos:', error);
         }
     }
-
-    async function teamPhotos() {
-        console.log('team choice:', teamChoice)
-    }
     
     useEffect(()=> {
-
-        if (teamChoice != null) {
+        console.log('team choice in filtered photos', teamChoice);
+        if (teamChoice === 'All') {
+            setFilteredPhotos(photos.filter(photo => photo.Key.startsWith(`photos/`)));
+        } else if (teamChoice != null) {
             setFilteredPhotos(photos.filter(photo => photo.Key.startsWith(`photos/${teamChoice}/`)));
-        } else {
-            setFilteredPhotos(photos.filter(photo => photo.Size > 0));
+
         }
     }, [teamChoice, photos]);
+
+    useEffect(()=> {
+        console.log('filtered photos updated!! -', filteredPhotos);
+    },[filteredPhotos]);
 
     useEffect(() => {
         console.log("useEffect for getPhotos running...");
@@ -78,75 +85,16 @@ export default function Photos() {
     }, []);
 
     useEffect(() => {
-        teamPhotos();
+        console.log('team choice on photos page', teamChoice)
     }, [teamChoice]);
-
-    useEffect(() => {
-        async function get_teams() {
-            try {
-                let query = get_teams_query;
-                //console.log('query:', query)
-                const response = await fetch('api/teams/', {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ query })
-                });
-
-                if (!response.ok) {
-                    console.log('error in response here')
-                    throw new Error("Error response not ok")
-                }
-
-                const result = await response.json();
-
-                console.log('result:', result)
-                console.log('result.results:', result.results)
-                setTeams([...result.results, { team_name: "All" }]);
-            } catch (error) {
-                console.log('Problem with data: ', teams)
-                console.error('error:', error);
-            }
-        }
-        get_teams()
-    }, []);
 
 
     function render_photos() {
-
+        console.log('render photos- filtered', filteredPhotos);
         if (!photos || teamChoice === null) {
             console.log('phtos:', photos);
             return <div><h1>Loading...</h1></div>
-        } else if (teamChoice === "All") {
-            
-            return (
-                <div className="w-full h-screen p-4 relative">
-                    <h1>{teamChoice}</h1>
-
-                    <div className="grid grid-cols-3 gap-4 relative">
-
-                        {photos.map((item, index) => (
-                            <div key={index} >
-                                <img 
-                                    src={`https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`}
-                                    alt={item.key}
-                                    className={`w-full h-auto transition-transform ${
-                                    expandedImage === index
-                                    ? 'absolute top-0 left-0 w-full h-full object-contain z-50'
-                                    : 'cursor-pointer'
-                                    }`}
-                                    onClick={() => 
-                                        imageClick(index)}
-                                        
-
-                                />
-
-                            </div>
-                        ))}
-
-                    </div>
-                </div>
-            );
-        }
+        } 
     
     else if (teamChoice != null) {
        
@@ -155,8 +103,10 @@ export default function Photos() {
                 <h1>{teamChoice ? teamChoice : "All2"}</h1>
                 {filteredPhotos.length === 0 ? (
                     <h1>No photos to display</h1>
+                   
                 ) : (
                 <div className="grid grid-cols-3 gap-4 relative">
+
                     {filteredPhotos.map((item, index) => (
                         <div key={index} >
                             <img 
@@ -183,7 +133,7 @@ export default function Photos() {
 
     return (
         <div>
-            
+            <Navbar />
             {render_photos()}
         </div>
 

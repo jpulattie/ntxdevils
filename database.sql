@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS sponsor(
     sponsor_website VARCHAR(225),
     sponsor_phone VARCHAR(225),
     sponsor_bio TEXT,
+    sponsor_photo VARCHAR(225),
     FOREIGN KEY (program_id) REFERENCES program(id) ON DELETE CASCADE
 );
 

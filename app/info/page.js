@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Navbar from "../Navbar";
+
 
 export default function Info() {
     const [ data, setData ] = useState([]);
@@ -39,6 +41,7 @@ export default function Info() {
     }, []);
     return(
         <div>
+            <Navbar />
             <h1><strong>Info</strong></h1>
             <ul>
                 {data && data.length > 0 ? (
@@ -48,7 +51,7 @@ export default function Info() {
                         <li key={index}>
                             <p><strong>{item.info_title}</strong>: {item.info_description}</p>
                             {item.info_link ?
-                            <p><a href={`https://${item.info_link}`} target="_blank">Link</a></p>
+                            <p><a href={`${item.info_link}`} target="_blank">Link</a></p>
                             : null}
                         </li>
                     ))

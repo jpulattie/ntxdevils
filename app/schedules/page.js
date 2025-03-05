@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { useTeam } from '../teamChoice'; 
+import Navbar from "../Navbar";
+
 
 
 export default function Schedule() {
@@ -152,6 +154,7 @@ where
 
     return (
         <div>
+            <Navbar />
             {render_schedules()}
         </div>
 
