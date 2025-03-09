@@ -16,7 +16,7 @@ export default function adminSchedules() {
 
 
     return (
-        <div className="bg-primroseYellow">
+        <div className="bg-primroseYellow bg-opacity-50">
             <Admin />
             <h1 className="text-lg font-bold text-myrtleGreen justify-center"> Teams </h1>
 

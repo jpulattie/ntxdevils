@@ -99,13 +99,13 @@ export default function Photos() {
     else if (teamChoice != null) {
        
         return (
-            <div className="w-full h-screen p-4 relative">
-                <h1>{teamChoice ? teamChoice : "All2"}</h1>
+            <div className="w-full h-screen p-2 px-6 relative">
+                <h1 className="inline-block text-lg font-bold text-white bg-myrtleGreen justify-center rounded-xl px-3 py-2 mb-4">{teamChoice ? teamChoice : "All2"}</h1>
                 {filteredPhotos.length === 0 ? (
                     <h1>No photos to display</h1>
                    
                 ) : (
-                <div className="grid grid-cols-3 gap-4 relative">
+                <div className="grid grid-cols-3 gap-4 relative bg-white p-4 rounded-xl">
 
                     {filteredPhotos.map((item, index) => (
                         <div key={index} >
@@ -114,7 +114,7 @@ export default function Photos() {
                                 alt={item.key}
                                 className={`w-full h-auto transition-transform ${
                                     expandedImage === index
-                                    ? 'absolute top-0 left-0 w-full h-full object-contain z-50'
+                                    ? 'absolute top-0 left-0 w-full h-full object-contain z-50 bg-myrtleGreen bg-opacity-90 p-4 rounded-xl overflow-hidden'
                                     : 'cursor-pointer'
                                     }`}
                                     onClick={() => imageClick(index)}

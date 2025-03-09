@@ -83,7 +83,7 @@ export default function RootLayout({ children }) {
                 priority
               />
               <Link href="/" className="col-span-2 font-roboto text-lg text-4.5xl bg-myrtleGreen text-primroseYellow text-center">
-                <h1>NTX DEVILS FOOTY</h1>
+                <h1 className="text-3xl text-primroseYellow font-bold">NTX DEVILS FOOTY</h1>
               </Link>
               <Image
                 className="dark:invert w-auto max-h-[65px] p-2"

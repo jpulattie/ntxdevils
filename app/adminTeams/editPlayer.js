@@ -341,7 +341,7 @@ export default function Edit() {
                     <Textarea
                         name="bio"
                         className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
-                        value={toEdit.bio !== 'null' ? toEdit.bio : ' '}
+                        value={toEdit.bio !== 'null' && toEdit.bio !== 'NULL' ? toEdit.bio : ' '}
 
                         placeholder="Bio..."
                         onChange={(e) => setToEdit({ ...toEdit, bio: e.target.value })}

@@ -120,13 +120,15 @@ order by
                                                 {item.position && item.position !== 'NULL' && item.position !== 'null' ? <td className="w-[20%] text-center">{item.position}</td> : <td className="w-[20%]"></td>}
                                                 {item.year_playing && item.year_playing !== 'NULL' && item.year_playing !== 'null' ? <td className="w-[20%] text-center">{item.year_playing}</td> :  <td className="w-[20%]"></td>}
                                                 {item.bio && item.bio !== 'NULL' && item.bio !== 'null' ? <td className="w-[30%]">{item.bio}</td> :  <td className="w-[30%]"></td>}
-                                                {item.picture ? (
+                                                {item.picture && item.picture !== 'null' && item.picture !== 'NULL' ? (
                                                 <td>
-                                                    <a className="w-[20%]" href={item.picture} target="_blank">
+                                                    <a className="w-[20%]" 
+                                                    href={item.picture} 
+                                                    target="_blank">
                                                         <div className="w-[20%] text-left items-center">
                                                             <img
                                                                 src={item.picture}
-                                                                alt={`$[item.player_name} photo`}
+                                                                alt={`$[item.player_name}`}
                                                                 className="pt-2 pb-2 pr-2  max-w-[100px] max-h-[100px] w-auto h-auto block" 
                                                             />
                                                         </div>
