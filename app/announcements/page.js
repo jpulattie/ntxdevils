@@ -11,7 +11,7 @@ export default function Announcements() {
     const [data, setData] = useState([]);
 
     let info_response;
-    let query = 'select * from announcements order by id desc limit 3;';
+    let query = 'select * from announcements order by id desc limit 15;';
 
     useEffect(() => {
         async function db_query() {
@@ -46,31 +46,32 @@ export default function Announcements() {
     return (
         <div>
             <Navbar />
-            <h1 className="inline-block text-lg font-bold text-white bg-myrtleGreen justify-center rounded px-3 py-2 "><strong>Announcements</strong></h1>
-            <table className="w-4/5 flex justify-center rounded-2xl px-2 py-2 gap-x-2">
-            <tbody className="shadow-lg justify-center bg-white rounded-xl px-4 py-4">
+            
+            <h1 className="inline-block text-lg font-bold text-white bg-myrtleGreen justify-center rounded-xl px-3 py-2 mt-2 mb-2"><strong>Announcements</strong></h1>
+            <div className="w-full flex justify-center rounded-2xl px-2 py-2 gap-x-2">
+            <div className="w-4/5 justify-end rounded-xl">
                     {data && data.length > 0 ? (
                         data
                             .filter(item => item !== null && item !== undefined)
                             .map((item, index) => (
-                                <React.Fragment key={index}>
-                                    <tr className="text-lg font-bold text-myrtleGreen">
-                                        {item.announcement_title ?
-                                            <td>{item.announcement_title}-</td>
-                                            : <td> </td>}
+                                <div key={index}>
+                                    <div className="block justify-center text-lg shadow-lg bg-white text-myrtleGreen border-2 border-myrtleGreen border border-opacity-20 rounded-xl mb-4 p-2">
+                                        {item.announcement_title && item.announcement_title !== 'null' ?
+                                            <h2 className="block mb-1 font-bold">{item.announcement_title} </h2>
+                                            : <div> </div>}
+                                        
+                                        {item.announcement && item.announcement !== 'null' ?
+                                            <div className= "block italic">{item.announcement}</div>
+                                            : <div> </div>}
 
-                                        {item.announcement ?
-                                            <td>{item.announcement}</td>
-                                            : <td> </td>}
-
-                                    </tr>
-                                </React.Fragment>
+                                    </div>
+                                </div>
                             ))
-                    ) : (<tr><td>Loading...</td></tr>)}
+                    ) : (<div><div>Loading...</div></div>)}
                 
 
-            </tbody>
-            </table>
+            </div>
+            </div>
         </div>
     )
 }

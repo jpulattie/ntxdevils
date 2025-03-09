@@ -210,6 +210,7 @@ export default function Edit() {
 
     const editSelect = (event) => {
         const selection = JSON.parse(event.target.value);
+        console.log('selection', selection);
         setToEdit({
             id: selection.id,
             sponsor_name: selection.sponsor_name,
@@ -251,7 +252,7 @@ export default function Edit() {
 
             <Fieldset className="w-4/5 flex-basis:80  bg-white  shadow-2xl block px-2 py-2 pt-4 ssjustify-center rounded-2xl">
 
-                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Edit Announcement</Legend>
+                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Edit Sponsor</Legend>
                 <Field>
                     <Label className="block flex justify-center py-2">Choose Sponsor to Edit</Label>
                     <Select

@@ -68,8 +68,8 @@ export default function Navbar() {
         <div className="w-full bg-myrtleGreen">
             <div className="flex flex-wrap flex-auto bg-myrtleGreen text-white justify-center space-x-4">
                 <Menu>
-                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2 rounded">
-                        Teams
+                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2 rounded-xl">
+                        Rosters
                     </MenuButton>
                     <MenuItems anchor="bottom">
                         {teams
@@ -91,7 +91,7 @@ export default function Navbar() {
                     </MenuItems>
                 </Menu>
                 <Menu>
-                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2 rounded">
+                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2 rounded-xl">
                         Schedules
                     </MenuButton>
                     <MenuItems anchor="bottom" className="w-fit data-[focus]:bg-myrtleGreen bg-myrtleGreen text-white cursor-pointer hover:bg-primroseYellow hover:text-white">
@@ -112,13 +112,13 @@ export default function Navbar() {
                             ))}
                     </MenuItems>
                 </Menu>
-                <div className="w-fit  text-white text-center bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded">
+                <div className="w-fit  text-white text-center bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded-xl">
                     <Link href="./info" className="w-full block">
                         Info
                     </Link>
                 </div>
                 <Menu>
-                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2">
+                    <MenuButton className="rounded-xl hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2">
                         Photos
                     </MenuButton>
                     <MenuItems anchor="bottom">
@@ -139,12 +139,12 @@ export default function Navbar() {
                             ))}
                     </MenuItems>
                 </Menu>
-                <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded">
+                <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded-xl">
                     <Link href="./sponsors" >
                         Sponsors
                     </Link>
                 </div>
-                <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded">
+                <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded-xl">
                     <Link href="./announcements" >
                         Announcements
                     </Link>

@@ -1,0 +1,90 @@
+1. Create a MySQL Table for User Sessions
+Run this SQL script to create a table that stores user conversation states:
+
+sql
+Copy
+Edit
+CREATE TABLE user_sessions (
+    phone_number VARCHAR(20) PRIMARY KEY,
+    state TEXT NOT NULL,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+2. Implement Twilio SMS Handling in a Next.js API Route
+This API route will: ✅ Check if a user already has a session
+✅ Update the session based on their responses
+✅ Send appropriate replies based on conversation state
+
+javascript
+Copy
+Edit
+const mysql2 = require("mysql2");
+const twilio = require("twilio");
+
+const db = mysql2.createPool({
+  host: process.env.DBHOST,
+  user: process.env.DBUSER,
+  password: process.env.DBPASS,
+  database: process.env.DBDATABASE,
+});
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") return res.status(405).end();
+
+  const { Body, From } = req.body; // SMS message content and sender's phone number
+  let replyMessage = "";
+
+  try {
+    // Check if the user has an active session
+    const [session] = await db
+      .promise()
+      .query("SELECT state FROM user_sessions WHERE phone_number = ?", [From]);
+
+    if (session.length === 0) {
+      // New user session
+      replyMessage = "Welcome! What's your name?";
+      await db
+        .promise()
+        .query("INSERT INTO user_sessions (phone_number, state) VALUES (?, ?)", [
+          From,
+          "AWAITING_NAME",
+        ]);
+    } else if (session[0].state === "AWAITING_NAME") {
+      // User replied with their name
+      replyMessage = `Nice to meet you, ${Body}! What's your email?`;
+      await db
+        .promise()
+        .query("UPDATE user_sessions SET state = ? WHERE phone_number = ?", [
+          "AWAITING_EMAIL",
+          From,
+        ]);
+    } else if (session[0].state === "AWAITING_EMAIL") {
+      // User replied with their email
+      replyMessage = `Thanks! We'll contact you at ${Body}. Have a great day!`;
+
+      // End session by deleting record
+      await db
+        .promise()
+        .query("DELETE FROM user_sessions WHERE phone_number = ?", [From]);
+    }
+
+    // Send response in TwiML format
+    res.setHeader("Content-Type", "text/xml");
+    res.status(200).send(`<Response><Message>${replyMessage}</Message></Response>`);
+  } catch (error) {
+    console.error("Error processing Twilio SMS:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+3. How This Works
+When a user sends an SMS, Twilio forwards it to your Next.js API route.
+The API:
+Checks if the user is in an active session (SELECT query).
+If no session, it asks for the user's name and creates a new session (INSERT).
+If awaiting name, it asks for the user's email and updates the session (UPDATE).
+If awaiting email, it thanks the user and deletes the session (DELETE).
+The response is formatted in TwiML so Twilio knows what to reply with.
+4. Benefits of This Approach
+✔ Persists data even if your server restarts.
+✔ No need for Redis, everything is handled in MySQL.
+✔ Efficient queries using mysql2 with promise().
+✔ Stateless API since all data is retrieved from the database.

@@ -1,0 +1,59 @@
+status will have a number that is the curr_status.
+use the status number as a switch
+each case... 
+    assigns the incoming message to a db value 
+    responds with a messages
+    sets the status to the next number
+    when finished the last number needs to ask to confirm
+    then prompt user to return home (case number 0)
+    or exit (set loggedIn to false & wipe login_time)
+
+0: Menu(logged in) - ask user to select area 
+8: logged out, need passcode
+9: menu or exit 
+
+1: announcements
+    10: new_announcement_title
+    11: new_announcement 
+    12: confirm 
+    9: menu or exit
+
+2: roster
+    20: player name
+    21: position
+    22: year playing
+    23: bio
+    25: confirm
+    9: menu or exit
+
+3: info
+    30: info title 
+    31: info description 
+    32: info link 
+    33: confirm 
+    9: menu or exit 
+
+4: sponsor
+    40: sponsor name 
+    41: level 
+    42: address 
+    43: website 
+    44: phone 
+    45: bio 
+    46: photo 
+    47: confirm 
+    9: menu or exit
+
+5: event
+    50: event name 
+    51: event type 
+    52: event date - check date format, if invalid keep status the same and prompt for new entry
+    53: event time - check date format, if invalid keep status the same and prompt for new entry
+    54: event description 
+    55: event address 
+    56: new opponent 
+    57: new team score - check type, convert if string, if invalid keep status same and reprompt
+    58: new opp score - check type, convert if string, if invalid keep status same and reprompt
+    59: new result 
+    60: confirm 
+    9: menu or exit

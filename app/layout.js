@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from "next/image";
 import Navbar from "./Navbar";
 import { TeamProvider } from './teamChoice';
+import {LoginProvider } from './loginProvider'
 import './globals.css';
 import {headers} from 'next/headers';
 
@@ -18,7 +19,7 @@ const roboto = Roboto({
 
 const pages = [
   {
-    name: 'Teams',
+    name: 'Rosters',
     link: "/teams"
   }, 
   {
@@ -66,6 +67,7 @@ export default function RootLayout({ children }) {
         className={`ml-[min(10%,25%)] mr-[min(10%,25%)] text-myrtleGreen text-center ${roboto.variable} antialiased flex flex-col min-h-screen shadow-2xl shadow-myrtleGreen-99 rounded`}
       >
         <TeamProvider>
+          <LoginProvider>
 
 
           <header>
@@ -98,11 +100,13 @@ export default function RootLayout({ children }) {
           </main>
           <footer className="bg-white grid grid-cols-1 grid-row-6 container m-auto bg-[#]">
             <p>&copy; Josh Pulattie 2024</p>
-            <Link href="/loggedin" className="col-span-2 font-roboto text-lg text-4.5xl bg-myrtleGreen text-primroseYellow text-center">
+            <Link href="/login/" className="col-span-2 font-roboto text-lg text-4.5xl bg-myrtleGreen text-primroseYellow text-center">
               Admin Login
               </Link>
           </footer>
+          </LoginProvider>
         </TeamProvider>
+        
 
       </body>
 

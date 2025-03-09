@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS roster(
     grade VARCHAR(225),
     year_playing INT,
     bio TEXT,
-    picture_url TEXT,
+    picture TEXT,
+    picture_key TEXT,
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
 );
 

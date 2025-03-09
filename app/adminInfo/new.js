@@ -20,13 +20,22 @@ export default function New() {
         info_link: ''
     });
     const [isAdded, setIsAdded ] = useState(false);
-
+    let newLink;
 
     let info_response;
 
 
     async function addInfo() {
-        let api_request = `insert into info (program_id, info_title, info_description, info_link) values (1, "${toAdd.info_title}", "${toAdd.info_description}", "${toAdd.info_link}"); `
+        console.log('info_link', toAdd.info_link)
+        console.log('info_link check', !(!toAdd.info_link.startsWith('https://') || toAdd.info_link === undefined ))
+
+        if (!toAdd.info_link || toAdd.info_link.startsWith('https://')) {
+            newLink = toAdd.info_link
+        } else {
+            newLink = `https://${toAdd.info_link}`
+        }
+       
+        let api_request = `insert into info (program_id, info_title, info_description, info_link) values (1, "${toAdd.info_title}", "${toAdd.info_description}", "${newLink}"); `
         try {
             console.log('sending API request to route')//, api_request)
             const response = await fetch('api/info', {

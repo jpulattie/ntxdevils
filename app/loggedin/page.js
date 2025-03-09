@@ -6,6 +6,7 @@ import { useTeam } from '../teamChoice';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { useLogin } from '../loginProvider';
 
 
 const pages = [
@@ -23,12 +24,17 @@ export default function Admin() {
     const { teamChoice, setTeamChoice } = useTeam();
     const [showMenu, setShowMenu] = useState(false);
     const [ category, setCategory ] = useState(false);
+    const {login, setLogin} = useLogin();
+
     let query;
     let get_teams_query = `select team_name from team;`
     const router = useRouter();
 
 
     async function getTeams() {
+        if (!login){
+            router.push('/')
+        } 
         try {
             let query = get_teams_query;
             console.log('query:', query)
@@ -66,10 +72,12 @@ export default function Admin() {
     }
 
     return (
-        <div className="w-full bg-primroseYellow">
-            <div className="flex flex-wrap flex-auto justify- space-x-4">
+        
+        <div className="w-full bg-primroseYellow bg-opacity-50">
+            <div className="w-full flex flex-wrap flex-auto justify-center space-x-4">
+                
                 <Menu>
-                    <MenuButton className="rounded bg-myrtleGreen text-white hover:bg-myrtleGreen hover:text-primroseYellow px-4 py-2 rounded">
+                    <MenuButton className="w-full bg-myrtleGreen text-white hover:bg-myrtleGreen hover:text-primroseYellow px-4 py-2">
                         Choose Edit Category...
                     </MenuButton>
                     <MenuItems anchor="bottom" className="bg-myrtleGreen text-white">
@@ -91,6 +99,7 @@ export default function Admin() {
                             ))}
                     </MenuItems>
                 </Menu>
+                
                 
 
             </div>

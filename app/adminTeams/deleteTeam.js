@@ -16,19 +16,21 @@ import { Field, Fieldset, Input, Label, Legend, Select, Textarea } from '@headle
 export default function Delete() {
     const [data, setData] = useState([]);
     const [toDelete, setToDelete] = useState(null);
-
+    const [deletekey, setDeletekey] = useState(null);
     let info_response;
+
+    
 
     useEffect(() => {
         async function db_query() {
-            let api_request = 'select * from info;';
+            let query = 'select * from team;';
 
             try {
-                console.log('sending API request to route')//, api_request)
-                const response = await fetch('api/info', {
+                console.log('sending API request to route')//, query)
+                const response = await fetch('api/teams', {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ api_request })
+                    body: JSON.stringify({ query })
                 });
 
                 if (!response.ok) {
@@ -39,9 +41,9 @@ export default function Delete() {
                 //console.log('result:',result)
                 if (result.results.length > 0) {
                     setToDelete(result.results[0].id)
-                    console.log("Initial info:", toDelete)
+                    console.log("Initial teams:", toDelete)
                 } else {
-                    console.log('initial info data', result.results);
+                    console.log('initial teams data', result.results);
                 }
                 setData(result.results);
                 console.log('data:', data)
@@ -50,7 +52,7 @@ export default function Delete() {
 
             catch {
                 //console.error('error catch', Error)
-                console.log('problem - need to clean up error catching2')
+                console.log('problem - need to clean up error deleteTeam')
                 console.log('data:', data)
             }
         }
@@ -58,14 +60,16 @@ export default function Delete() {
         db_query();
     }, []);
 
-    async function deleteInfo(id) {
-        let api_request = `delete from info where id = "${id}";`
+    async function deleteTeam(id) {
+        let query = `delete from team where id = "${id}";`
+        console.log('query for delete team', query);
         try {
-            console.log('sending API request to route')//, api_request)
-            const response = await fetch('api/info', {
+            console.log('sending API request to route')//, query)
+            const response = await fetch('api/teams', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ api_request })
+                body: JSON.stringify({ query })
+                //intentional error ^^^^^^^^^^^^^^ to block api from working and deleting
             });
 
             if (!response.ok) {
@@ -73,25 +77,25 @@ export default function Delete() {
                 throw new Error("Error response not ok")
             }
             const result = await response.json();
-            //console.log('result:',result)
+            console.log('result!!!:',result)
             await db_query();
 
         }
 
         catch {
             //console.error('error catch', Error)
-            console.log('problem - need to clean up error catching2')
+            console.log('problem - need to clean up error deleteTeam 2')
             console.log('data:', data)
         }
 
-        api_request = 'select * from info;';
+        query = 'select * from team;';
 
         try {
-            console.log('sending API request to route')//, api_request)
-            const response = await fetch('api/info', {
+            console.log('sending API request to route')//, query)
+            const response = await fetch('api/teams', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ api_request })
+                body: JSON.stringify({ query })
             });
 
             if (!response.ok) {
@@ -102,9 +106,9 @@ export default function Delete() {
             //console.log('result:',result)
             if (result.results.length > 0) {
                 setToDelete(result.results[0].id)
-                console.log("Initial info:", toDelete)
+                console.log("Initial teams:", toDelete)
             } else {
-                console.log('initial info data', result.results);
+                console.log('initial teams data', result.results);
             }
             setData(result.results);
             console.log('data:', data)
@@ -113,22 +117,28 @@ export default function Delete() {
 
         catch {
             //console.error('error catch', Error)
-            console.log('problem - need to clean up error catching2')
+            console.log('problem - need to clean up error last deleteTeam')
             console.log('data:', data)
         }
     }
 
     const deleteSelect = (event) => {
-        setToDelete(event.target.value);
+        const deleteId = event.target.value
+        setToDelete(deleteId);
+        const key = data.find(item => item.id.toString() === deleteId);
+        if (deleteId) {
+            setDeletekey(key.sponsor_photo_key)
+        }
     }
 
     return (
         <div className="flex justify-center">
 
             <Fieldset className="w-4/5 flex-basis:80 pt-4 bg-white  shadow-2xl block px-2 py-2 justify-center rounded-2xl">
-                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Delete Info</Legend>
+                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Delete Team</Legend>
                 <Field>
-                    <Label className="block flex justify-center py-2">Choose Info to Delete</Label>
+                    <Label className="block flex justify-center py-2">Choose Team to Delete</Label>
+                    <p className="italic block flex justify-center py-2">players on roster will NOT be deleted, only the team</p>
                     <Select
                         className="border border-myrtleGreen px-4 py-1 border-1"
                         onChange={deleteSelect}
@@ -138,7 +148,7 @@ export default function Delete() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={item.id}>{item.info_title} - {item.info_description}</option>
+                                    <option key={item.id} value={item.id}>{item.team_name}</option>
                                 ))) : null
                         };
                     </Select>
@@ -149,7 +159,7 @@ export default function Delete() {
                         className="text-lg font-bold bg-primroseYellow text-myrtleGreen px-4 py-2 justify-center rounded-2xl"
 
                         onClick={() => {
-                            deleteInfo(toDelete);
+                            deleteTeam(toDelete);
                         }}
                     >DELETE</button>
                 </Field>

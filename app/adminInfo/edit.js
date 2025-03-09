@@ -23,6 +23,7 @@ export default function Edit() {
     const [isAdded, setIsAdded] = useState(false);
     const [index, setIndex] = useState(0);
     let info_response;
+    let newLink;
 
 
     useEffect(() => {
@@ -69,7 +70,13 @@ export default function Edit() {
     }, []);
 
     async function editInfo() {
-        let api_request = `update info set info_title = "${toEdit.info_title}", info_description = "${toEdit.info_description}", info_link = "${toEdit.info_link}" where id = ${toEdit.id};`
+        if (!toEdit.info_link || toEdit.info_link.startsWith('https://')) {
+            newLink = toEdit.info_link
+        } else {
+            newLink = `https://${toEdit.info_link}`
+        }
+        
+        let api_request = `update info set info_title = "${toEdit.info_title}", info_description = "${toEdit.info_description}", info_link = "${newLink}" where id = ${toEdit.id};`
 
         try {
             console.log('sending API request to route')//, api_request)
@@ -163,7 +170,7 @@ export default function Edit() {
 
             <Fieldset className="w-4/5 flex-basis:80  bg-white  shadow-2xl block px-2 py-2 pt-4 ssjustify-center rounded-2xl">
 
-                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Edit Announcement</Legend>
+                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Edit Info</Legend>
                 <Field>
                     <Label className="block flex justify-center py-2">Choose Info to Edit</Label>
                     <Select
@@ -208,8 +215,9 @@ export default function Edit() {
                         className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
                         value={toEdit.info_link !== 'null' ? toEdit.info_link : ' '}
 
-                        placeholder="New Announcement..."
-                        onChange={(e) => setToEdit({ ...toEdit, info_link: e.target.value })}
+                        placeholder="Web link"
+                        onChange={(e) => 
+                            setToEdit({ ...toEdit, info_link: e.target.value })}
                     />
                 </Field>
 

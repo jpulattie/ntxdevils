@@ -76,6 +76,7 @@ export default function New() {
 
         let query = `insert into sponsor (program_id, sponsor_name, sponsor_level, sponsor_address, sponsor_website, sponsor_phone, sponsor_bio, sponsor_photo, sponsor_photo_key) values (1, "${toAdd.sponsor_name}", "${toAdd.sponsor_level}", "${toAdd.sponsor_address}", "${toAdd.sponsor_website}", "${toAdd.sponsor_phone}", "${toAdd.sponsor_bio}", "${newURL}", "${newKey}"); `
         
+
         console.log('photo url', newURL);
         console.log("query:", query)
         //console.log('sponsor name2', setToAdd.sponsor_name);
