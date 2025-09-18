@@ -17,7 +17,8 @@ export default function Edit() {
     const [toEdit, setToEdit] = useState({
         id: '',
         announcement_title: '',
-        announcement: ''
+        announcement: '',
+        announcement_link: ''
     });
     const [isAdded, setIsAdded] = useState(false);
 
@@ -47,6 +48,8 @@ export default function Edit() {
                         id: result.results[0].id,
                         announcement_title: result.results[0].announcement_title,
                         announcement: result.results[0].announcement,
+                        announcement_link: result.results[0].announcement_link,
+
                     })
                     console.log("Initial announcements:", toEdit)
                 } else {
@@ -65,7 +68,7 @@ export default function Edit() {
     }, []);
 
     async function editAnnouncement() {
-        let query = `update announcements set announcement_title = "${toEdit.announcement_title}", announcement = "${toEdit.announcement}" where id = ${toEdit.id};`
+        let query = `update announcements set announcement_title = "${toEdit.announcement_title}", announcement = "${toEdit.announcement}", announcement_link = "${toEdit.announcement_link}" where id = ${toEdit.id};`
 
         try {
             console.log('sending API request to route')//, api_request)
@@ -106,8 +109,7 @@ export default function Edit() {
             console.log('result:',result)
             setData(result.results);
             setIsAdded(true);
-            setToAdd({ title: '', announcement: '' }); 
-            
+            setToAdd({ title: '', announcement: '', announcement_link:'' }); 
         }
 
         catch {
@@ -122,13 +124,16 @@ export default function Edit() {
         setToEdit({
             id: selection.id,
             announcement:selection.announcement,
-            announcement_title: selection.announcement_title
+            announcement_title: selection.announcement_title,
+            announcement_link: selection.announcement_link
         });
     }
 
 
     const addEdit = async (toEdit) => {
         await editAnnouncement();
+        window.alert(`${toEdit.announcement_title} updated!`)
+
 
     }
 
@@ -154,7 +159,10 @@ export default function Edit() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={JSON.stringify(item)}>{item.announcement}</option>
+                                    <option key={item.id} value={JSON.stringify(item)}>
+                                        {item.announcement?.length > 30 
+                                        ? item.announcement.slice(0,30) + "..."
+                                    : item.announcement}</option>
                                 ))) : null
                         };
                     </Select>
@@ -176,6 +184,16 @@ export default function Edit() {
                         value={toEdit.announcement !== 'null' ? toEdit.announcement : ' '}
                         placeholder="Announcement"
                         onChange={(e) => setToEdit({ ...toEdit, announcement: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Announcement Link</Label>
+                    <Textarea
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        name="announcement"
+                        value={toEdit.announcement_link !== 'null' ? toEdit.announcement_link : ' '}
+                        placeholder="Announcement Link"
+                        onChange={(e) => setToEdit({ ...toEdit, announcement_link: e.target.value })}
                     />
                 </Field>
                 

@@ -18,7 +18,7 @@ export default function adminInfo() {
     const [data, setData] = useState([]);
 
     return (
-        <div className="bg-primroseYellow bg-opacity-50">
+        <div>
             <Admin />
             <h1 className="text-lg font-bold text-myrtleGreen justify-center"> PHOTOS </h1>
 

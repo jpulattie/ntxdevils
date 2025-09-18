@@ -24,7 +24,7 @@ export default function adminAnnouncements() {
 
 
     return (
-        <div className="bg-primroseYellow bg-opacity-50">
+        <div>
             <Admin />
             <h1 className="text-lg font-bold text-myrtleGreen justify-center"> ANNOUNCEMENTS </h1>
 

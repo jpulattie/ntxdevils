@@ -38,10 +38,11 @@ CREATE TABLE IF NOT EXISTS roster(
     player_name VARCHAR(225),
     position VARCHAR(225),
     grade VARCHAR(225),
-    year_playing INT,
+    year_playing VARCHAR(225),
     bio TEXT,
     picture TEXT,
     picture_key TEXT,
+    sponsor_link TEXT,
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
 );
 
@@ -99,5 +100,7 @@ CREATE TABLE IF NOT EXISTS photo_intersection(
 CREATE TABLE IF NOT EXISTS photo(
     id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
     photo_url TEXT NOT NULL
+
+
 
 );

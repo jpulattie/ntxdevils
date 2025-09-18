@@ -13,7 +13,7 @@ export async function POST (request) {
         const body = await request.json();
         console.log('body of new req: ', body )
         const request_body = body.query;
-        console.log("new request in API route: ", request_body)
+        console.log("new request: ", request_body)
         const [results, fields] = await db.promise().query(request_body);
         console.log("results", results, " fields",fields)
 
@@ -24,7 +24,6 @@ export async function POST (request) {
             },
         });
     } catch (error) {
-        console.log("error caught in api route:", error)
         return new Response(JSON.stringify({ message: "error" }), {
             status: 500,
             headers: {

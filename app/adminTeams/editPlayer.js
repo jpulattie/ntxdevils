@@ -24,7 +24,8 @@ export default function Edit() {
         year_playing: '',
         bio: '',
         picture: '',
-        picture_key: ''
+        picture_key: '',
+        sponsor_link: ''
     });
     const [teams, setTeams] = useState([]);
 
@@ -48,8 +49,8 @@ export default function Edit() {
                         body: JSON.stringify({ query })
                     });
                     const data = await response.json();
-                    console.log('teams data', data.results);
-                    console.log('attempting to access id', data.results?.[0]?.id);
+                    //console.log('teams data', data.results);
+                    //console.log('attempting to access id', data.results?.[0]?.id);
                     setTeams(data.results);
                     //setToEdit({ ...toEdit, team_id: data.results?.[0]?.id})
                 } catch (error) {
@@ -89,8 +90,8 @@ export default function Edit() {
                     body: formData2,
                 });
                 const data = await response.json();
-                console.log('upload successful', data);
-                console.log('url', data.url);
+                //console.log('upload successful', data);
+                //console.log('url', data.url);
                 newURL = data.url;
                 newKey = data.key;
                 //data.url gives the url of the photo, need to send that to an 
@@ -117,10 +118,10 @@ export default function Edit() {
             years = toEdit.year_playing
 
         }
-        let query = `update roster set team_id = "${toEdit.team_id}", player_name = "${toEdit.player_name}", position = "${toEdit.position}", grade = "${toEdit.grade}", year_playing = "${years}", bio = "${toEdit.bio}", picture = "${newURL}", picture_key = "${newKey}" where id = ${toEdit.id};`
+        let query = `update roster set team_id = "${toEdit.team_id}", player_name = "${toEdit.player_name}", position = "${toEdit.position}", grade = "${toEdit.grade}", year_playing = "${years}", bio = "${toEdit.bio}", picture = "${newURL}", picture_key = "${newKey}", sponsor_link="${toEdit.sponsor_link}" where id = ${toEdit.id};`
 
         try {
-            console.log('sending API request to route')//, query)
+            console.log('sending UPDATE API request to route', query)
             const response = await fetch('api/teams', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -155,23 +156,24 @@ export default function Edit() {
                 throw new Error("Error response not ok")
             }
             const result = await response.json();
-            console.log('results:', result.results)
-            console.log('current index', index)
+            //console.log('results:', result.results)
+            //console.log('current index', index)
             setData(result.results);
-            //ßsetIndex(0);
+            setIndex(0);
 
 
             if (result.results.length > 0) {
                 setToEdit({
-                    id: result.results[index].id,
-                    team_id: result.results[index].team_id,
-                    player_name: result.results[index].player_name,
-                    position: result.results[index].position,
-                    grade: result.results[index].grade,
-                    year_playing: result.results[index].year_playing,
-                    bio: result.results[index].bio,
-                    picture: result.results[index].picture,
-                    picture_key: result.results[index].picture_key,
+                    id: '',
+                    team_id: '',
+                    player_name: '',
+                    position: '',
+                    grade: '',
+                    year_playing: '',
+                    bio: '',
+                    picture: '',
+                    picture_key: '',
+                    sponsor_link: ''
 
                 });
                 console.log("roster after update:", toEdit)
@@ -207,7 +209,7 @@ export default function Edit() {
                     throw new Error("Error response not ok")
                 }
                 const result = await response.json();
-                console.log('result:', result)
+                //console.log('result:', result)
                 console.log('first load of edit player', result.results[index])
                 setData(result.results);
                 setIndex(0);
@@ -222,9 +224,10 @@ export default function Edit() {
                         bio: result.results[index].bio,
                         picture: result.results[index].picture,
                         picture_key: result.results[index].picture_key,
+                        sponsor_link: result.results[index].sponsor_link
                     });
 
-                    console.log("Initial roster:", result.results)
+                    //console.log("Initial roster:", result.results)
                 } else {
                     console.log('initial roster data', result.results);
                 }
@@ -253,12 +256,14 @@ export default function Edit() {
             bio: selection.bio,
             picture: selection.picture,
             picture_key: selection.picture_key,
+            sponsor_link: selection.sponsor_link
         });
     }
 
 
 
     const addEdit = async (toEdit) => {
+        window.alert(`Updating ${toEdit.player_name}`);
         await editPlayer();
 
     }
@@ -301,7 +306,10 @@ export default function Edit() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={JSON.stringify(item)}>{item.player_name}</option>
+                                    <option key={item.id} value={JSON.stringify(item.player_name)}>
+                                        {item.player_name?.length > 30 
+                                        ? item.player_name.slice(0,30) + "..."
+                                    : item.player_name}</option>
                                 ))) : null
                         };
                     </Select>
@@ -330,10 +338,23 @@ export default function Edit() {
                     <Input
                         name="year playing"
                         className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
-                        value={toEdit.year_playing !== 'null' ? toEdit.year_playing : ' '}
+                        value={toEdit.year_playing !== 'null'&& toEdit.year_playing !== null? toEdit.year_playing : ' '}
 
                         placeholder="Year playing"
                         onChange={(e) => setToEdit({ ...toEdit, year_playing: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Sponsor Link</Label>
+                    <Input
+                        name="sponsor_link"
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        value={toEdit.sponsor_link !== 'null' && toEdit.sponsor_link !== null ? toEdit.sponsor_link : ' '}
+
+                        placeholder="Sponsor Link"
+                        onChange={(e) => {
+                            setToEdit({ ...toEdit, sponsor_link: e.target.value })}
+                        }
                     />
                 </Field>
                 <Field>
@@ -403,6 +424,7 @@ export default function Edit() {
 
                         onClick={() => {
                             addEdit(toEdit);
+                            document.querySelector('select').value=''
                         }}
                     >UPDATE</button>
                 </Field>

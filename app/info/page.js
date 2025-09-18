@@ -41,10 +41,9 @@ export default function Info() {
     }, []);
     return(
         <div>
-            <Navbar />
             <h1 className="inline-block text-lg font-bold text-white bg-myrtleGreen justify-center rounded-xl px-3 py-2 mt-2 mb-2"><strong>Info</strong></h1>
             <div className="w-full flex justify-center rounded-2xl px-2 py-2 gap-x-2">
-                <div className="w-4/5 justify-end rounded-xl mb-4 p-2">
+                <div className="m:w-4/5 justify-end rounded-xl mb-4 p-2">
                 {data && data.length > 0 ? (
                     data
                     .filter(item => item !== null && item !== undefined)
@@ -53,7 +52,7 @@ export default function Info() {
                             <div><strong>{item.info_title}</strong></div>
                             <div>{item.info_description}</div>
                             {item.info_link && item.info_link !== "null" && item.info_link !== null ?
-                            <div><a href={`${item.info_link}`} target="_blank"><p className="inline-block hover:text-roseRed text-myrtleGreen px-1 rounded">View Link</p></a></div>
+                            <div><a href={`${item.info_link}`} target="_blank"><p className="inline-block hover:bg-myrtleGreen hover:text-white text-blue-400 px-1 rounded-lg ">View Link</p></a></div>
                             : null}
                         </div>
                     ))

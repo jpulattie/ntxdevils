@@ -20,7 +20,7 @@ export default function adminInfo() {
     const [data, setData] = useState([]);
 
     return (
-        <div className="bg-primroseYellow bg-opacity-50">
+        <div className=" min-h-screen">
             <Admin />
             <h1 className="text-lg font-bold text-myrtleGreen justify-center"> INFO </h1>
 

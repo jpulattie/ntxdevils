@@ -130,7 +130,7 @@ export default function Delete() {
         <div className="flex justify-center">
             
             <Fieldset className="w-4/5 flex-basis:80 pt-4 bg-white  shadow-2xl block px-2 py-2 justify-center rounded-2xl">
-                <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Delete Announcement</Legend>
+                <Legend className="text-lg font-bold text-myrtleGreen justify-center rounded-xl inline-block px-4">Delete Announcement</Legend>
                 <Field>
                     <Label className="block flex justify-center py-2">Choose Announcement to Delete</Label>
                     <Select 
@@ -141,9 +141,16 @@ export default function Delete() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id}value={item.id}>{item.announcement}</option>
+                                    <option key={item.id} value={JSON.stringify(item)}>
+                                        {item.announcement?.length > 30 
+                                        ? item.announcement.slice(0,30) + "..."
+                                    : item.announcement}</option>
                                 ))) : null
                         };
+
+
+
+                        
                     </Select>
                 </Field>
                 <Field className="pt-4 pb-4">

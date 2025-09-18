@@ -168,13 +168,13 @@ export default function Edit() {
     return (
         <div className="flex justify-center">
 
-            <Fieldset className="w-4/5 flex-basis:80  bg-white  shadow-2xl block px-2 py-2 pt-4 ssjustify-center rounded-2xl">
+            <Fieldset className="w-4/5 flex-basis:80  bg-white  shadow-2xl block px-2 py-2 pt-4 justify-center rounded-2xl">
 
                 <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Edit Info</Legend>
                 <Field>
                     <Label className="block flex justify-center py-2">Choose Info to Edit</Label>
                     <Select
-                        className="border border-myrtleGreen px-4 py-1 border-1"
+                        className="max-w-full max-w-[250px] md:max-w-[500px] truncate border border-myrtleGreen px-4 py-1 border-1 overflow-hidden"
                         onChange={(e)=>{
                             setIndex(e.target.index);
                             editSelect(e)
@@ -184,7 +184,10 @@ export default function Edit() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={JSON.stringify(item)}>{item.info_title} - {item.info_description}</option>
+                                    <option key={item.id} value={JSON.stringify(item)}>
+                                        {item.info_description?.length > 40 
+                                        ? item.info_description.slice(0,40) + "..."
+                                    : item.info_description}</option>
                                 ))) : null
                         };
                     </Select>

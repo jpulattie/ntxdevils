@@ -226,7 +226,27 @@ export default function Edit() {
 
 
     const addEdit = async (toEdit) => {
+        window.alert(`Updating 
+            ${toEdit.sponsor_name}
+            ${toEdit.sponsor_level}
+            ${toEdit.sponsor_address}
+            ${toEdit.sponsor_website}
+            ${toEdit.sponsor_phone}
+            ${toEdit.$sponsor_bio}
+            ${toEdit.sponsor_photo}
+            ${toEdit.sponsor_photo_key}`);
         await editSponsor();
+        setToEdit({
+        id: '',
+        sponsor_name: '',
+        sponsor_level: '',
+        sponsor_address: '',
+        sponsor_website: '',
+        sponsor_phone: '',
+        sponsor_bio: '',
+        sponsor_photo: '',
+        sponsor_photo_key: ''
+    })
 
     }
 
@@ -264,11 +284,16 @@ export default function Edit() {
                             editSelect(e)
                         }}
                     >
+                       
+
                         {data && data.length > 0 ? (
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id}  value={JSON.stringify(item)}>{item.sponsor_name}</option>
+                                    <option key={item.id} value={JSON.stringify(item)}>
+                                        {item.sponsor_name?.length > 30 
+                                        ? item.sponsor_name.slice(0,30) + "..."
+                                    : item.sponsor_name}</option>
                                 ))) : null
                         };
                     </Select>
@@ -374,7 +399,8 @@ export default function Edit() {
                         className="text-lg font-bold bg-primroseYellow text-myrtleGreen px-4 py-2 justify-center rounded-2xl"
 
                         onClick={() => {
-                            addEdit(toEdit);
+                            addEdit(toEdit)
+                            document.querySelector('select').value=''
                         }}
                     >UPDATE</button>
                 </Field>

@@ -91,7 +91,6 @@ on
     roster.team_id = team.id
 
 --insert into schedule/event
-
 insert into event(
     event_name,
     event_type,
@@ -233,7 +232,7 @@ select
     event.event_date,
     event.event_time,
     event.event_description,
-    event.event_address,
+    --event.event_address,
     event.event_city,
     event.event_state,
     event.event_zip,
@@ -249,3 +248,166 @@ left outer join
     team on schedule.team_id = team.id
 where
     team.team_name = "Mens";
+
+
+
+--testing calls that through errors below
+insert into event (
+    event_name,
+    event_type,
+    event_date,
+    event_time,
+    event_description,
+    event_address,
+    event_city,
+    event_state,
+    event_zip,
+    opponent,
+    team_score,
+    opponent_score,
+    result)
+values (
+    "test16",
+    "",
+    '2025-08-09',
+    '22:08',
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    null,
+    null,
+    "")
+;
+
+select
+    event.event_name,
+    event.event_type,
+    event.event_date,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result
+from
+    event
+left outer join
+    schedule on event.id = schedule.event_id
+left outer join
+    team on schedule.team_id = team.id
+where
+    team.team_name = "Mens";
+
+select
+    event.event_name,
+    event.event_type,
+    event.event_date,
+    event.event_time,
+    event.event_description,
+    --event.event_address,
+    event.event_city,
+    event.event_state,
+    event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result
+from
+    event
+left outer join
+    schedule on event.id = schedule.event_id
+left outer join
+    team on schedule.team_id = team.id
+where
+    team.team_name = "Mens" and event_name = "test2";
+
+select
+    LIST_AGG(distint team.team_name order by team.team_name separator ', ') as team_name,
+    event.event_name,
+    event.event_type,
+    event.event_date,
+    --event.event_time,
+    event.event_description,
+    --event.event_address,
+    --event.event_city,
+    --event.event_state,
+    --event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result
+from
+    event
+left outer join
+    schedule on event.id = schedule.event_id
+left outer join
+    team on schedule.team_id = team.id
+group BY
+        event.event_name,
+    event.event_type,
+    event.event_date,
+    --event.event_time,
+    event.event_description,
+    --event.event_address,
+    --event.event_city,
+    --event.event_state,
+    --event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result;
+
+
+select
+    event.id,
+    team.team_name
+from
+    event left outer join
+    schedule
+        on event.id = schedule.event_id left outer join
+    team on schedule.team_id = team.id;
+
+select
+    event.id,
+    event.event_name,
+    event.event_date,
+    event.event_type,
+    event.evern_time,
+    event.event_description,
+    event.event_address,
+    event.event_city,
+    event.event_state,
+    event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result,
+    GROUP_CONCAT(DISTINCT team.team_name ORDER BY team.team_name SEPARATOR ', ') AS teams
+from
+    event left outer join
+    schedule
+        on event.id = schedule.event_id left outer join
+    team on schedule.team_id = team.id
+group by
+    event.id,
+    event.event_name,
+    event.event_date,
+    event.event_type,
+    event.evern_time,
+    event.event_description,
+    event.event_address,
+    event.event_city,
+    event.event_state,
+    event.event_zip,
+    event.opponent,
+    event.team_score,
+    event.opponent_score,
+    event.result,
+order by
+    event.event_date;
+
+--event_name,
+    --listagg(team.team_name, ' ') as team
+    --GROUP_CONCAT(DISTINCT team.team_name ORDER BY team.team_name SEPARATOR ' + ') AS teams,
+    --event_name;

@@ -19,14 +19,16 @@ export default function New() {
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
     const [toAdd, setToAdd] = useState({
-        team_id: '',
+        team_id: 1,
+        team_name: '',
         player_name: '',
         position: '',
         grade: '',
         year_playing: '',
         bio: '',
         picture: '',
-        picture_key: ''
+        picture_key: '',
+        sponsor_link:''
 
     });
     const [isAdded, setIsAdded] = useState(false);
@@ -105,7 +107,7 @@ export default function New() {
             console.error("upload failed", data.error);
         }
         console.log('toAdd right before query', toAdd);
-        let query = `insert into roster (team_id, player_name, position, grade, year_playing, bio, picture, picture_key) values (${toAdd.team_id}, "${toAdd.player_name}", "${toAdd.position}", "${toAdd.grade}", ${years}, "${toAdd.bio}", "${newURL}", "${newKey}"); `
+        let query = `insert into roster (team_id, player_name, position, grade, year_playing, bio, picture, picture_key, sponsor_link) values (${toAdd.team_id}, "${toAdd.player_name}", "${toAdd.position}", "${toAdd.grade}", ${years}, "${toAdd.bio}", "${newURL}", "${newKey}", "${toAdd.sponsor_link}); `
         console.log('query', query);
 
         console.log('photo url', newURL);
@@ -123,6 +125,7 @@ export default function New() {
                 console.log('response with error:', response)
                 throw new Error("Error response not ok")
             }
+            console.log('NO ERROR YET')
             const result = await response.json();
             //console.log('result:',result)
             setIsAdded(true);
@@ -134,7 +137,8 @@ export default function New() {
                 year_playing: '',
                 bio: '',
                 picture: '',
-                picture_key: ''
+                picture_key: '',
+                sponsor_link: '',
             });
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
@@ -145,6 +149,7 @@ export default function New() {
         catch {
             //console.error('error catch', Error)
             console.log('problem - need to clean up error catching in newPlayer')
+            alert('problem- please try again. Problem Data:', data)
             console.log('data:', data)
         }
     }
@@ -152,9 +157,16 @@ export default function New() {
     async function addNew() {
         console.log('checking photo', (toAdd.picture === undefined))
         console.log('to add...', toAdd)
-        if (window.confirm(`Are you sure you wish to add...
-            Name:${toAdd.player_name} 
-            Photo:${toAdd.picture.name}`)) {
+        if (toAdd.team_id > 0) {
+             if (window.confirm(`Are you sure you wish to add...
+            Name: ${toAdd.player_name} 
+            Position: ${toAdd.position}
+            Team: ${toAdd.team_name}
+            Year Playing: ${toAdd.year_playing}
+            Bio: ${toAdd.bio.slice(0,20)}${toAdd.bio.length > 20 ? '...' : ''}
+            Photo:${toAdd.picture?.name != undefined ? toAdd.picture.name : 'No Photo Uploaded'}
+            Sponsor Link: ${toAdd.sponsor_link}
+            `)) {
             console.log('checker', toAdd.picture);
             //console.log('checking conditional', typeof toAdd.sponsor_photo, toAdd.sponsor_photo);
             //console.log('checking conditional .name', typeof toAdd.sponsor_photo?.name, toAdd.sponsor_photo?.name);
@@ -163,7 +175,9 @@ export default function New() {
 
         }
         else { console.log("canceled") }
-    }
+    } else {
+        alert("Please Select Team")
+    }}
 
     useEffect(() => {
         console.log('new photo effect', newPhoto)
@@ -190,7 +204,7 @@ export default function New() {
                     <Label className="block flex justify-center px-2 py-3">Player Name</Label>
                     <Input
 
-                        name="title"
+                        name="name"
                         className="border border-myrtleGreen px-3 py-1 border-1"
                         placeholder="Name"
                         value={toAdd.player_name}
@@ -200,7 +214,7 @@ export default function New() {
                 <Field>
                     <Label className="block flex justify-center px-2 py-3">Position</Label>
                     <Input
-                        name="level"
+                        name="position"
                         className="border border-myrtleGreen px-3 py-2 h-auto border-1"
                         placeholder="Position"
                         value={toAdd.position}
@@ -210,7 +224,7 @@ export default function New() {
                 <Field>
                     <Label className="block flex justify-center px-2 py-3">Year Playing</Label>
                     <Input
-                        name="address"
+                        name="year_playing"
                         className="border border-myrtleGreen px-3 py-2 h-auto border-1"
                         placeholder="Year Playing..."
                         value={toAdd.year_playing}
@@ -218,10 +232,20 @@ export default function New() {
                     />
                 </Field>
                 <Field>
+                    <Label className="block flex justify-center px-2 py-3">Sponsor Link</Label>
+                    <Input
+                        name="sponsor_link"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="Sponsor Link..."
+                        value={toAdd.sponsor_link}
+                        onChange={(e) => setToAdd({ ...toAdd, sponsor_link: e.target.value })}
+                    />
+                </Field>
+                <Field>
                     <Label className="block flex justify-center px-2 py-3">Bio</Label>
                     <Textarea
                         name="website"
-                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        className="border border-myrtleGreen px-3 py-2 h-[80%] border-1"
                         placeholder="Bio"
                         value={toAdd.bio}
                         onChange={(e) => setToAdd({ ...toAdd, bio: e.target.value })}
@@ -230,10 +254,17 @@ export default function New() {
                 <Field>
                     <Label className="block flex justify-center px-2 py-3">Team</Label>
                     <Select
+                        aria-label="Select Team"
                         className="border border-myrtleGreen px-4 py-1 border-1"
-                        onChange={(e) => setToAdd({ ...toAdd, team_id: e.target.value })}
-                        
+                        onChange={(e) =>  {
+                            const selectedOption = e.target.options[e.target.selectedIndex];
+                            const teamId = e.target.value;
+                            const teamName = selectedOption.text;
+                            setToAdd({ ...toAdd, team_id: teamId, team_name: teamName })
+                            
+                        }}
                     >
+                        <option>Select Team</option>
                         {teams && teams.length > 0 ? (
                             teams
                                 .filter(item => item !== null && item !== undefined)

@@ -186,10 +186,15 @@ left outer join
                         {data && data.length > 0 ? (
                             data
                                 .filter(item => item !== null && item !== undefined)
-                                .map((item, index) => (
-                                    <option key={item.id} value={item.id}>Team: {item.team_name} || Event: {item.event_name} || Type: {item.event_type} || id: {item.id}</option>
-                                ))) : null
+                                .map((item, index) => {
+                                const selectFull = `${item.event_type}-${item.event_name} Team[${item.team_name}]`;
+                                const selectDisplay = selectFull.length > 40 ? selectFull.slice(0,40) + "..." : selectFull;
+                                return    (
+                                    <option key={`${item.id}-${item.team_name}`} value={item.id} >{selectDisplay} </option>
+                                )})) : null
                         };
+
+                        
                     </Select>
                 </Field>
                 <Field className="pt-4 pb-4">

@@ -27,6 +27,7 @@ export default function Admin() {
     const {login, setLogin} = useLogin();
     let query;
     const router = useRouter();
+    const message = "Incorrect Username & Password Combination. Please try again"
 
 
     function loginScreen() {
@@ -37,9 +38,12 @@ export default function Admin() {
         console.log('login check', (username === process.env.NEXT_PUBLIC_USERNAME && password === process.env.NEXT_PUBLIC_PASSWORD))
         if (username === process.env.NEXT_PUBLIC_USERNAME && password === process.env.NEXT_PUBLIC_PASSWORD) {
             console.log('LOGGING IN');
+            setLogin(true)
             router.push('/loggedin')
+        } else {
+            alert(message);
         }
-        setLogin(true);
+        ;
     };
 
     
@@ -47,7 +51,7 @@ export default function Admin() {
 
 
     return (
-        <div className="w-full bg-primroseYellow bg-opacity-50">
+        <div className="w-full min-h-screen">
             <div className="w-full">
 
                 <Field>

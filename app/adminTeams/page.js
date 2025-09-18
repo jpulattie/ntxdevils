@@ -16,18 +16,22 @@ export default function adminSchedules() {
 
 
     return (
-        <div className="bg-primroseYellow bg-opacity-50">
+        <div>
             <Admin />
             <h1 className="text-lg font-bold text-myrtleGreen justify-center"> Teams </h1>
 
             <TabGroup>
-                <TabList className="justify-center rounded-2xl px-2 py-2  inline-flex flex-wrap gap-x-2">
-                    <Tab className="flex text-lg font-bold shadow-lg bg-myrtleGreen text-white justify-center rounded-xl inline-block px-2 py-2 mb-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">New Team</Tab>
-                    <Tab className="flex text-lg font-bold shadow-lg bg-myrtleGreen text-white justify-center rounded-xl inline-block px-4 py-2 mb-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">Edit Team</Tab>
-                    <Tab className="flex text-lg font-bold shadow-lg bg-myrtleGreen text-white justify-center rounded-xl inline-block px-4 py-2 mb-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">Delete Team</Tab>
-                    <Tab className="flex text-lg font-bold shadow-lg bg-myrtleGreen text-primroseYellow justify-center rounded-xl inline-block px-4 py-2 mb-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">New Player</Tab>
-                    <Tab className="flex text-lg font-bold shadow-lg bg-myrtleGreen text-primroseYellow justify-center rounded-xl inline-block px-4 py-2 mb-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">Edit Player</Tab>
-                    <Tab className="flex text-lg font-bold shadow-lg bg-myrtleGreen text-primroseYellow justify-center rounded-xl inline-block px-4 py-2 mb-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">Delete Player</Tab>
+                <TabList className="justify-center rounded-2xl px-2 py-2 flex inline-flex flex-wrap gap-x-2">
+                    <div className="flex w-full m-2 justify-center">
+                        <Tab className="flex sm:text-lg text-sm font-bold shadow-lg bg-myrtleGreen text-white justify-center rounded-xl m-2 px-4 py-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">New Team</Tab>
+                        <Tab className="flex sm:text-lg text-sm font-bold shadow-lg bg-myrtleGreen text-white justify-center rounded-xl m-2 px-4 py-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">Edit Team</Tab>
+                        <Tab className="flex sm:text-lg text-sm font-bold shadow-lg bg-myrtleGreen text-white justify-center rounded-xl m-2 px-4 py-2 focus:bg-white focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-white hover:text-myrtleGreen">Delete Team</Tab>
+                    </div>
+                    <div className="flex w-full m-2 justify-center">
+                        <Tab className="flex sm:text-lg text-sm font-bold shadow-lg bg-white text-myrtleGreen justify-center rounded-xl m-2 px-4 py-2 focus:bg-primroseYellow focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-primroseYellow hover:text-myrtleGreen">New Player</Tab>
+                        <Tab className="flex sm:text-lg text-sm font-bold shadow-lg bg-white text-myrtleGreen justify-center rounded-xl m-2 px-4 py-2 focus:bg-primroseYellow focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-primroseYellow hover:text-myrtleGreen">Edit Player</Tab>
+                        <Tab className="flex sm:text-lg text-sm font-bold shadow-lg bg-white text-myrtleGreen justify-center rounded-xl m-2 px-4 py-2 focus:bg-primroseYellow focus:text-myrtleGreen focus:inset-shadow-xl hover:bg-opacity-80 hover:bg-primroseYellow hover:text-myrtleGreen">Delete Player</Tab>
+                    </div>
                 </TabList>
                 <TabPanels>
                     <TabPanel>

@@ -13,7 +13,7 @@ export default function adminSchedules() {
 
 
     return (
-        <div className="bg-primroseYellow bg-opacity-50">
+        <div className="min-h-screen">
             <Admin />
             <h1 className="text-lg font-bold text-myrtleGreen justify-center"> SCHEDULES </h1>
 

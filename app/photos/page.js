@@ -88,6 +88,12 @@ export default function Photos() {
         console.log('team choice on photos page', teamChoice)
     }, [teamChoice]);
 
+    function under_construction() {
+        return <div>
+                <h1 className="p-5">This page is under construction</h1>
+                <p>Check back for updates later</p>
+                </div>
+    }
 
     function render_photos() {
         console.log('render photos- filtered', filteredPhotos);
@@ -133,8 +139,7 @@ export default function Photos() {
 
     return (
         <div>
-            <Navbar />
-            {render_photos()}
+            {under_construction()}
         </div>
 
     )

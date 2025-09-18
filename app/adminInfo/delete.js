@@ -129,19 +129,35 @@ export default function Delete() {
                 <Legend className="text-lg font-bold bg-primroseYellow text-myrtleGreen justify-center rounded-xl inline-block px-4">Delete Info</Legend>
                 <Field>
                     <Label className="block flex justify-center py-2">Choose Info to Delete</Label>
-                    <Select
-                        className="border border-myrtleGreen px-4 py-1 border-1"
+                    <select
+                        className="max-w-full max-w-[250px] md:max-w-[500px] truncate border border-myrtleGreen px-4 py-1 border-1 mx-auto block text-left"
                         onChange={deleteSelect}
                         
-                    >
+                    > {/*}
                         {data && data.length > 0 ? (
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={item.id}>{item.info_title} - {item.info_description}</option>
+                                    <option 
+                                    key={item.id} 
+                                    value={item.id}
+                                    className="truncate whitespace-nowrap overflow-hidden"
+
+                                    >{item.info_title} - {item.info_description}</option>
                                 ))) : null
                         };
-                    </Select>
+*/}
+                        {data && data.length > 0 ? (
+                            data
+                                .filter(item => item !== null && item !== undefined)
+                                .map((item, index) => (
+                                    <option key={item.id} value={JSON.stringify(item)}>
+                                        {item.info_description?.length > 40 
+                                        ? item.info_description.slice(0,40) + "..."
+                                    : item.info_description}</option>
+                                ))) : null
+                        };
+                    </select>
                 </Field>
                 <Field className="pt-4 pb-4">
                     <button

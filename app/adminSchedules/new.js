@@ -16,22 +16,22 @@ import { Lexend_Tera } from 'next/font/google';
 export default function New() {
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
-
+    const [all, setAll] = useState(false);
     const [toAdd, setToAdd] = useState({
         team_id: '',
         team_name: '',
         event_name: '',
         event_type: '',
-        event_date: '',
-        event_time: '',
+        event_date: null,
+        event_time: null,
         event_description: '',
         event_address: '',
         event_city: '',
         event_state: '',
         event_zip: '',
         opponent: '',
-        team_score: '',
-        opponent_score: '',
+        team_score: null,
+        opponent_score: null,
         result: ''
     });
     const [isAdded, setIsAdded] = useState(false);
@@ -40,6 +40,11 @@ export default function New() {
     let team_score;
     let opponent_score;
     let created_id;
+    let event_date;
+    let event_time;
+    let team_ids = [];
+    let intersection_id;
+    let query;
 
     useEffect(() => {
         let query = "select team_name, id from team;"
@@ -54,7 +59,7 @@ export default function New() {
                 console.log('teams data', data.results);
                 console.log('attempting to access id', data.results?.[0]?.id);
                 setTeams(data.results);
-                setToAdd({ ...toAdd, team_id: data.results?.[0]?.id })
+                //setToAdd({ ...toAdd, team_id: data.results?.[0]?.id })
             } catch (error) {
                 console.error('error loading teams', error)
             }
@@ -62,6 +67,30 @@ export default function New() {
         getTeams();
 
     }, []);
+
+    async function insertIntersection(team) {
+        console.log('team id param', team)
+        console.log("team id type", typeof (team))
+        query = `insert into schedule (team_id, event_id) values ("${team}", ${intersection_id}); `
+
+        try {
+            console.log('sending API request to route')//, query)
+            const response = await fetch('api/schedules', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query })
+            });
+
+            if (!response.ok) {
+                console.log('response with error:', response)
+                throw new Error("Error response not ok")
+            }
+            const result = await response.json();
+
+        } catch (error) {
+            console.error('error', error);
+        }
+    }
 
     async function addEvent() {
         console.log('team score', toAdd.team_score);
@@ -79,12 +108,25 @@ export default function New() {
         } else if (toAdd.opponent_score !== '') {
             opponent_score = toAdd.opponent_score
         }
-        let query = `insert into event (event_name, event_type, event_date, event_time, event_description, event_address, event_city, event_state, event_zip, opponent, team_score, opponent_score, result) values ("${toAdd.event_name}", "${toAdd.event_type}", '${toAdd.event_date}', '${toAdd.event_time}', "${toAdd.event_description}", "${toAdd.event_address}", "${toAdd.event_city}", "${toAdd.event_state}", "${toAdd.event_zip}", "${toAdd.opponent}", ${team_score}, ${opponent_score}, "${toAdd.result}"); `
+        if (toAdd.team_id === '') {
+            console.log(toAdd.team_id)
+            window.confirm(`Please choose a team or teams for this event`)
+        }
 
-        console.log("query:", query)
-        //console.log('sponsor name2', setToAdd.sponsor_name);
+        if (toAdd.event_time === '') {
+            console.log('event time blank')
+
+            event_time = null;
+        } else if (toAdd.event_time !== '') {
+            event_time = `'${toAdd.event_time}'`
+        }
+
+
+        let query = `insert into event (event_name, event_type, event_date, event_time, event_description, event_address, event_city, event_state, event_zip, opponent, team_score, opponent_score, result) values ("${toAdd.event_name}", "${toAdd.event_type}", '${toAdd.event_date}', ${event_time}, "${toAdd.event_description}", "${toAdd.event_address}", "${toAdd.event_city}", "${toAdd.event_state}", "${toAdd.event_zip}", "${toAdd.opponent}", ${team_score}, ${opponent_score}, "${toAdd.result}"); `
+
+        console.log("query on insert page.js:", query)
         try {
-            console.log('sending API request to route')//, query)
+            console.log('sending API request to route...', query)//, query)
             const response = await fetch('api/schedules', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -106,7 +148,7 @@ export default function New() {
             console.log('data:', data)
         }
 
-        query = `select id from event where event_name = "${toAdd.event_name}" AND event_type = "${toAdd.event_type}" AND event_date= '${toAdd.event_date}' AND event_time= '${toAdd.event_time}' AND event_description= "${toAdd.event_description}" AND event_address= "${toAdd.event_address}" AND opponent ="${toAdd.opponent}"; `
+        query = `select id from event where event_name = "${toAdd.event_name}" AND event_date = '${toAdd.event_date}' AND event_time=${event_time} AND event_type = "${toAdd.event_type}"  AND event_description= "${toAdd.event_description}" AND event_address= "${toAdd.event_address}" AND opponent ="${toAdd.opponent}"; `
 
         console.log("query:", query)
         //console.log('sponsor name2', setToAdd.sponsor_name);
@@ -134,59 +176,113 @@ export default function New() {
             console.log('data:', data)
         }
 
-        let intersection_id = created_id.id
+        intersection_id = created_id.id
         console.log('intersection id', intersection_id);
-        query = `insert into schedule (team_id, event_id) values ("${toAdd.team_id}", ${intersection_id}); `
 
-        try {
-            console.log('sending API request to route')//, query)
-            const response = await fetch('api/schedules', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query })
-            });
+        /// INSERT FUNCTIONALITY TO INSERT THE EVENT INTO MULTIPLE TEAMS
+        // at this point the event is created
+        // probably need a call to get back all team id's - select id from team;
+        // take that, parse it into a list and iterate through sending the insert call for each team_id below
 
-            if (!response.ok) {
-                console.log('response with error:', response)
-                throw new Error("Error response not ok")
+        //call to get team id's
+        console.log('team id check', toAdd.team_id)
+        if (toAdd.team_id === '') {
+            window.confirm(`Please choose a team or teams for this event`)
+        } else {
+            if (toAdd.team_id === 'All') {
+
+                console.log("team Id all!!")
+                query = `select id from team;`
+                try {
+                    console.log('sending API request to route')//, query)
+                    const response = await fetch('api/schedules', {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ query })
+                    });
+
+                    if (!response.ok) {
+                        console.log('response with error:', response)
+                        throw new Error("Error response not ok")
+                    }
+                    const result = await response.json();
+                    team_ids = result.results
+                    console.log('team ids', team_ids)
+                    console.log('team ids length', team_ids.length)
+
+                } catch (error) {
+                    console.error('error', error);
+                }
+                console.log('team ids length outside', team_ids.length)
+                for (let i = 0; i < team_ids.length; i++) {
+                    console.log('team_id = ', team_ids[i].id)
+                    insertIntersection(team_ids[i].id)
+                }
+
+            } else {
+                insertIntersection(toAdd.team_id)
             }
-            const result = await response.json();
+            /*
+            query = `insert into schedule (team_id, event_id) values ("${toAdd.team_id}", ${intersection_id}); `
+    
+            try {
+                console.log('sending API request to route')//, query)
+                const response = await fetch('api/schedules', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query })
+                });
+    
+                if (!response.ok) {
+                    console.log('response with error:', response)
+                    throw new Error("Error response not ok")
+                }
+                const result = await response.json();
+    
+            } catch (error) {
+                console.error('error', error);
+            }
+            */
+            setIsAdded(true);
+            setToAdd({
+                team_id: '',
+                team_name: '',
+                event_name: '',
+                event_type: '',
+                event_date: '',
+                event_time: '',
+                event_description: '',
+                event_address: '',
+                event_city: '',
+                event_state: '',
+                event_zip: '',
+                opponent: '',
+                team_score: '',
+                opponent_score: '',
+                result: ''
 
-        } catch (error) {
-            console.error('error', error);
+            });
         }
-        setIsAdded(true);
-        setToAdd({
-            team_id: '',
-            team_name: '',
-            event_name: '',
-            event_type: '',
-            event_date: '',
-            event_time: '',
-            event_description: '',
-            event_address: '',
-            event_city: '',
-            event_state: '',
-            event_zip: '',
-            opponent: '',
-            team_score: '',
-            opponent_score: '',
-            result: ''
-
-        });
     }
 
     async function addNew() {
-        if (window.confirm(`Are you sure you wish to add...
-            Name:${toAdd.event_name} 
-            Type:${toAdd.event_type} 
-            Description: ${toAdd.event_description}`)) {
+        console.log(toAdd)
+        if (toAdd.event_date !== null) {
+            if (window.confirm(`Are you sure you wish to add...
+                Name:${toAdd.event_name} 
+                Type:${toAdd.event_type} 
+                Date:${toAdd.event_date}
+                Time:${toAdd.event_time}
+                Description: ${toAdd.event_description}`)) {
 
 
-            await addEvent();
+                await addEvent();
 
+            }
+            else { console.log("canceled") }
+        } else {
+            alert("Please choose a Date")
         }
-        else { console.log("canceled") }
     }
 
 
@@ -195,6 +291,10 @@ export default function New() {
             setIsAdded(false);
         }
     }, [isAdded])
+
+    useEffect(()=> {
+        console.log(setToAdd.team_id)
+    }, [setToAdd])
 
     return (
         <div className="flex justify-center">
@@ -206,9 +306,14 @@ export default function New() {
                     <Label className="block flex justify-center px-2 py-3">Team</Label>
                     <Select
                         className="border border-myrtleGreen px-4 py-1 border-1"
-                        onChange={(e) => setToAdd({ ...toAdd, team_id: e.target.value })}
+                        onChange={(e) => {
+                            setToAdd({ ...toAdd, team_id: e.target.value })
+                            console.log("chosen team to add...", e.target.value)
+                        }}
 
                     >
+                        <option>Select Team</option>
+                        <option value='All' >All</option>
                         {teams && teams.length > 0 ? (
                             teams
                                 .filter(item => item !== null && item !== undefined)
@@ -251,12 +356,33 @@ export default function New() {
                     />
                 </Field>
                 <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event City</Label>
+                    <Input
+                        name="city"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="event city..."
+                        value={toAdd.event_city}
+                        onChange={(e) => setToAdd({ ...toAdd, event_city: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event State</Label>
+                    <Input
+                        name="state"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="event state..."
+                        value={toAdd.event_state}
+                        onChange={(e) => setToAdd({ ...toAdd, event_state: e.target.value })}
+                    />
+                </Field>
+                <Field>
                     <Label className="block flex justify-center px-2 py-3">Event Date</Label>
                     <Input
                         name="date"
                         type="date"
                         className="border border-myrtleGreen px-3 py-2 h-auto border-1"
                         placeholder="date"
+                        required
                         value={toAdd.event_date}
                         onChange={(e) => setToAdd({ ...toAdd, event_date: e.target.value })}
                     />

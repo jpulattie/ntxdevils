@@ -42,7 +42,7 @@ export default function Edit() {
     const SQLDate = (isoDate) => {
         return isoDate.split('T')[0];
     };
-    
+
     let get_schedules_query = `select
     team.id as team_id,
     team.team_name,
@@ -234,7 +234,7 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
 
 
     const editSelect = (selection) => {
-        
+
         console.log("SELECTION'", selection);
         setToEdit({
             team_id: selection.team_id,
@@ -262,7 +262,7 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
 
     }
 
-    
+
 
 
     useEffect(() => {
@@ -301,121 +301,145 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
                         {data && data.length > 0 ? (
                             data
                                 .filter(item => item !== null && item !== undefined)
-                                .map((item, index) => (
-                                    <option key={item.id} value={item.id}>Team: {item.team_name} || Event: {item.event_name} || Type: {item.event_type} || team_id: {item.team_id} || event_id: {item.id}</option>
-                                ))) : null
+                                .map((item, index) => {
+                                const selectFull = `${item.event_type}-${item.event_name} Team[${item.team_name}]`;
+                                const selectDisplay = selectFull.length > 40 ? selectFull.slice(0,40) + "..." : selectFull;
+                                return    (
+                                    <option key={`${item.id}-${item.team_name}`} value={item.id} >{selectDisplay} </option>
+                                )})) : null
                         };
                     </Select>
                 </Field>
-               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Event Name</Label>
-                                   <Input
-               
-                                       name="title"
-                                       className="border border-myrtleGreen px-3 py-1 border-1"
-                                       placeholder="New event name..."
-                                       value={toEdit.event_name}
-                                       onChange={(e) => setToEdit({ ...toEdit, event_name: e.target.value })}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Event Type</Label>
-                                   <Input
-                                       name="level"
-                                       className="border border-myrtleGreen px-3 py-2 h-auto border-1"
-                                       placeholder="type of event"
-                                       value={toEdit.event_type}
-                                       onChange={(e) => setToEdit({ ...toEdit, event_type: e.target.value })}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Event Address</Label>
-                                   <Input
-                                       name="address"
-                                       className="border border-myrtleGreen px-3 py-2 h-auto border-1"
-                                       placeholder="event address..."
-                                       value={toEdit.event_address}
-                                       onChange={(e) => setToEdit({ ...toEdit, event_address: e.target.value })}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Event Date</Label>
-                                   <Input
-                                       name="date"
-                                       type="date"
-                                       className="border border-myrtleGreen px-3 py-2 h-auto border-1"
-                                       placeholder="date"
-                                       value={toEdit.event_date ? SQLDate(toEdit.event_date): ''}
-                                       onChange={(e) => {
-                                        console.log('date check', SQLDate(e.target.value)),
-                                        setToEdit({ ...toEdit, event_date: SQLDate(e.target.value) })}
-                                       }
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Event Time</Label>
-                                   <Input
-                                       name="time"
-                                       type="time"
-                                       className="border border-myrtleGreen px-3 py-2 h-auto border-1"
-                                       placeholder="time"
-                                       value={toEdit.event_time || ''}
-                                       onChange={(e) => setToEdit({ ...toEdit, event_time: e.target.value })}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Opponent</Label>
-                                   <Input
-                                       name="opponent"
-                                       type="text"
-                                       className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
-                                       placeholder="leave blank if there is no opponent"
-                                       value={toEdit.opponent}
-                                       onChange={(e) => setToEdit({ ...toEdit, opponent: e.target.value })}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Team Score</Label>
-                                   <input
-                                       name="team_score"
-                                       type="number"
-                                       //multiple  - for later use in photos, multiple allows for multiple file uploads, but doesn't apply here
-                                       //for multiple change e.target.files[0] to Awway.from(e.target.files)
-                                       className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
-                                       placeholder="Our score - leave blank if no scoreor '0' if no points were scored"
-                                       onChange={(e) => {
-                                           setToEdit({ ...toEdit, team_score: e.target.value });
-                                       }}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Opponent Score</Label>
-                                   <input
-                                       name="opponent_score"
-                                       type="number"
-                                       //multiple  - for later use in photos, multiple allows for multiple file uploads, but doesn't apply here
-                                       //for multiple change e.target.files[0] to Awway.from(e.target.files)
-                                       className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
-                                       placeholder="Opponent score - leave blank if no score or '0' if no points were scored"
-                                       onChange={(e) => {
-                                           setToEdit({ ...toEdit, opponent_score: e.target.value });
-                                       }}
-                                   />
-                               </Field>
-                               <Field>
-                                   <Label className="block flex justify-center px-2 py-3">Result</Label>
-                                   <input
-                                       name="result"
-                                       type="text"
-                                       //multiple  - for later use in photos, multiple allows for multiple file uploads, but doesn't apply here
-                                       //for multiple change e.target.files[0] to Awway.from(e.target.files)
-                                       className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
-                                       placeholder="example: 'W' - 'L'"
-                                       onChange={(e) => {
-                                           setToEdit({ ...toEdit, result: e.target.value });
-                                       }}
-                                   />
-                               </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event Name</Label>
+                    <Input
+
+                        name="title"
+                        className="border border-myrtleGreen px-3 py-1 border-1"
+                        placeholder="New event name..."
+                        value={toEdit.event_name}
+                        onChange={(e) => setToEdit({ ...toEdit, event_name: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event Type</Label>
+                    <Input
+                        name="level"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="type of event"
+                        value={toEdit.event_type}
+                        onChange={(e) => setToEdit({ ...toEdit, event_type: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event Address</Label>
+                    <Input
+                        name="address"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="event address..."
+                        value={toEdit.event_address}
+                        onChange={(e) => setToEdit({ ...toEdit, event_address: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event City</Label>
+                    <Input
+                        name="city"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="event city..."
+                        value={toEdit.event_city}
+                        onChange={(e) => setToEdit({ ...toAdd, event_city: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event State</Label>
+                    <Input
+                        name="state"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="event state..."
+                        value={toEdit.event_state}
+                        onChange={(e) => setToEdit({ ...toAdd, event_state: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event Date</Label>
+                    <Input
+                        name="date"
+                        type="date"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="date"
+                        value={toEdit.event_date ? SQLDate(toEdit.event_date) : ''}
+                        onChange={(e) => {
+                            console.log('date check', SQLDate(e.target.value)),
+                                setToEdit({ ...toEdit, event_date: SQLDate(e.target.value) })
+                        }
+                        }
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Event Time</Label>
+                    <Input
+                        name="time"
+                        type="time"
+                        className="border border-myrtleGreen px-3 py-2 h-auto border-1"
+                        placeholder="time"
+                        value={toEdit.event_time || ''}
+                        onChange={(e) => setToEdit({ ...toEdit, event_time: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Opponent</Label>
+                    <Input
+                        name="opponent"
+                        type="text"
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        placeholder="leave blank if there is no opponent"
+                        value={toEdit.opponent}
+                        onChange={(e) => setToEdit({ ...toEdit, opponent: e.target.value })}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Team Score</Label>
+                    <input
+                        name="team_score"
+                        type="number"
+                        //multiple  - for later use in photos, multiple allows for multiple file uploads, but doesn't apply here
+                        //for multiple change e.target.files[0] to Awway.from(e.target.files)
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        placeholder="Our score - leave blank if no scoreor '0' if no points were scored"
+                        onChange={(e) => {
+                            setToEdit({ ...toEdit, team_score: e.target.value });
+                        }}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Opponent Score</Label>
+                    <input
+                        name="opponent_score"
+                        type="number"
+                        //multiple  - for later use in photos, multiple allows for multiple file uploads, but doesn't apply here
+                        //for multiple change e.target.files[0] to Awway.from(e.target.files)
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        placeholder="Opponent score - leave blank if no score or '0' if no points were scored"
+                        onChange={(e) => {
+                            setToEdit({ ...toEdit, opponent_score: e.target.value });
+                        }}
+                    />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Result</Label>
+                    <input
+                        name="result"
+                        type="text"
+                        //multiple  - for later use in photos, multiple allows for multiple file uploads, but doesn't apply here
+                        //for multiple change e.target.files[0] to Awway.from(e.target.files)
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        placeholder="example: 'W' - 'L'"
+                        onChange={(e) => {
+                            setToEdit({ ...toEdit, result: e.target.value });
+                        }}
+                    />
+                </Field>
 
                 <Field className="pt-4 pb-4">
                     <button

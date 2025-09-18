@@ -171,7 +171,10 @@ export default function Delete() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={item.id}>{item.sponsor_name}</option>
+                                    <option key={item.id} value={JSON.stringify(item)}>
+                                        {item.sponsor_name?.length > 30 
+                                        ? item.sponsor_name.slice(0,30) + "..."
+                                    : item.sponsor_name}</option>
                                 ))) : null
                         };
                     </Select>

@@ -3,8 +3,12 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import React from 'react';
+import { usePlayer } from '../playerChoice';
 import { useTeam } from '../teamChoice';
+
 import Navbar from "../Navbar";
+import { useRouter } from 'next/navigation';
+
 
 
 
@@ -13,7 +17,11 @@ export default function Roster() {
     const [roster, setRoster] = useState([]);
     let query;
     const { teamChoice, setTeamChoice } = useTeam(null);
+    const { player, setPlayer } = usePlayer(null);
+
     const [ loading, setLoading ] = useState();
+    const router = useRouter();
+
 
     let get_roster_query = `select
     team.team_name,
@@ -21,7 +29,8 @@ export default function Roster() {
     roster.position,
     roster.year_playing,
     roster.bio,
-    roster.picture
+    roster.picture,
+    roster.sponsor_link
 from
     roster
 left outer join
@@ -37,7 +46,9 @@ order by
     roster.position,
     roster.year_playing,
     roster.bio,
-    roster.picture
+    roster.picture,
+    roster.sponsor_link
+
 from
     roster
 left outer join
@@ -95,16 +106,13 @@ order by
         return (
             
             <div className="rounded rounded-xl">
-                <h1 className="inline-block text-lg font-bold text-white bg-myrtleGreen justify-center rounded-xl px-3 py-2 mt-2 mb-2"><strong>Roster - </strong>{teamChoice}</h1>
-                <div className="w-4/5 mx-auto rounded-xl">
-                <table className="w-full text-left rounded-2xl px-2 py-2 gap-x-2 overflow-hidden">
-                    <tbody className="w-4/5 justify-end rounded-xl">
+                <h1 className="inline-block font-bold text-white text-lg font-bold bg-myrtleGreen justify-center rounded-xl px-3 py-2 mt-2 mb-2"><strong>Roster - </strong>{teamChoice ? teamChoice : 'All'}</h1>
+                <div className="md:w-4/5 w-full mx-auto rounded-xl px-4">
+                <table className="table-fixed w-full text-left rounded-2xl px-2 py-2 gap-x-2 overflow-hidden">
+                    <tbody className="md:w-4/5 w-full justify-end rounded-xl">
                         <tr className="w-full bg-myrtleGreen text-white rounded-xl"> 
-                            <th className="w-[25%] pl-2 pr-2 pt-2 pb-2">Name</th>
-                            <th className="w-[20%] text-center">Position</th>
-                            <th className="w-[20%] text-center">Year Playing</th>
-                            <th className="w-[30%] text-center">Bio</th>
-                            <th className="w-[20%]">Picture</th>
+                            <th className="w-[50%] pl-2 pr-2 pt-2 pb-2 text-center">Name</th>
+                            <th className="w-[50%] text-center">Picture</th>
 
                         </tr>
                         {roster && roster.length > 0 ? (
@@ -115,21 +123,29 @@ order by
                                     .map((item, index) => {
                                         return (
                                             
-                                            <tr key={`${item.player_name}-${index}`} className="pt-2 pb-2 text-left text-lg shadow-lg bg-white text-myrtleGreen border-2 border-myrtleGreen border border-opacity-20 rounded-xl">
-                                                <td className="w-[25%] pl-2 pr-2 pt-2 pb-2">{item.player_name}</td>
-                                                {item.position && item.position !== 'NULL' && item.position !== 'null' ? <td className="w-[20%] text-center">{item.position}</td> : <td className="w-[20%]"></td>}
-                                                {item.year_playing && item.year_playing !== 'NULL' && item.year_playing !== 'null' ? <td className="w-[20%] text-center">{item.year_playing}</td> :  <td className="w-[20%]"></td>}
-                                                {item.bio && item.bio !== 'NULL' && item.bio !== 'null' ? <td className="w-[30%]">{item.bio}</td> :  <td className="w-[30%]"></td>}
+                                            <tr key={`${item.player_name}-${index}`} className="pt-2 pb-2 text-center md:text-lg shadow-lg bg-white text-myrtleGreen border-2 border-myrtleGreen border border-opacity-20 rounded-xl">
+                                                <td 
+                                                    className="w-[25%] pl-2 pr-2 pt-2 pb-2"
+                                                    onClick={() => {
+                                                        setPlayer(item);
+                                                        router.push('/player');
+                                                    }}
+                                                    ><span className="hover:p-2 hover:bg-myrtleGreen hover:text-white rounded-xl hover:cursor-default">{item.player_name}</span></td>
+                                                
                                                 {item.picture && item.picture !== 'null' && item.picture !== 'NULL' ? (
-                                                <td>
-                                                    <a className="w-[20%]" 
-                                                    href={item.picture} 
-                                                    target="_blank">
-                                                        <div className="w-[20%] text-left items-center">
+                                                <td className="text-center">
+                                                    <a className=" inline-block hover:bg-myrtleGreen hover:text-white hover:rounded-lg hover:cursor-default" 
+                                                        onClick={() => {
+                                                                    setPlayer(item);
+                                                                    router.push('/player');
+                                                                }}
+                                                    >
+                                                        <div className="flex justify-center items-center p-2 ">
                                                             <img
                                                                 src={item.picture}
-                                                                alt={`$[item.player_name}`}
-                                                                className="pt-2 pb-2 pr-2  max-w-[100px] max-h-[100px] w-auto h-auto block" 
+                                                                alt={`${item.player_name}`}
+                                                                className="max-w-[100px] max-h-[100px] w-auto h-auto block hover:rounded-lg" 
+                                                                
                                                             />
                                                         </div>
                                                         </a> 
@@ -140,12 +156,12 @@ order by
                                     });
                             })()
                         ) : (
-                            <tr className="pt-2 pb-2 text-center text-lg shadow-lg border-myrtleGreen border border-opacity-20 rounded-xl">
-                                <td className="pt-2 pb-2 text-center text-lg bg-white text-myrtleGreen ">{loading}</td>
-                                <td className="pt-2 pb-2 text-center text-lg bg-white text-myrtleGreen "></td>
-                                <td className="pt-2 pb-2 text-center text-lg bg-white text-myrtleGreen "></td>
-                                <td className="pt-2 pb-2 text-center text-lg bg-white text-myrtleGreen "></td>
-                                <td className="pt-2 pb-2 text-center text-lg bg-white text-myrtleGreen "></td>
+                            <tr className="pt-2 pb-2 text-center md:text-lg shadow-lg border-myrtleGreen border border-opacity-20 rounded-xl">
+                                <td className="pt-2 pb-2 text-center md:text-lg bg-white text-myrtleGreen ">{loading}</td>
+                                <td className="pt-2 pb-2 text-center md:text-lg bg-white text-myrtleGreen "></td>
+                                <td className="pt-2 pb-2 text-center md:text-lg bg-white text-myrtleGreen "></td>
+                                <td className="pt-2 pb-2 text-center md:text-lg bg-white text-myrtleGreen "></td>
+                                <td className="pt-2 pb-2 text-center md:text-lg bg-white text-myrtleGreen "></td>
                             </tr>
                         )}
                     </tbody>
@@ -158,7 +174,6 @@ order by
 
     return (
         <div>
-            <Navbar />
             {render_roster()}
         </div>
 

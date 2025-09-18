@@ -16,7 +16,8 @@ export default function New() {
     const [data, setData] = useState([]);
     const [toAdd, setToAdd] = useState({
         title: '',
-        announcement: ''
+        announcement: '',
+        announcement_link: ''
     });
     const [isAdded, setIsAdded]= useState(false);
 
@@ -55,7 +56,7 @@ export default function New() {
     }, []);
 
     async function addAnnouncement() {
-        let query = `insert into announcements (program_id, announcement_title, announcement) values (1, "${toAdd.title}", "${toAdd.announcement}"); `
+        let query = `insert into announcements (program_id, announcement_title, announcement, announcement_link) values (1, "${toAdd.title}", "${toAdd.announcement}", "${toAdd.announcement_link}"); `
         try {
             console.log('sending API request to route')//, api_request)
             const response = await fetch('api/announcements', {
@@ -71,7 +72,7 @@ export default function New() {
             const result = await response.json();
             console.log('result:',result)
             setIsAdded(true);
-            setToAdd({ title: '', announcement: '' }); 
+            setToAdd({ title: '', announcement: '', announcement_link: '' }); 
 
 
         }
@@ -120,6 +121,16 @@ export default function New() {
                         placeholder="New Announcement..."
                         value={toAdd.announcement}
                         onChange={(e) => setToAdd({...toAdd, announcement: e.target.value})}
+                        />
+                </Field>
+                <Field>
+                    <Label className="block flex justify-center px-2 py-3">Announcement Link</Label>
+                    <Textarea 
+                        name="announcement link" 
+                        className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
+                        placeholder="New Announcement..."
+                        value={toAdd.announcement_link}
+                        onChange={(e) => setToAdd({...toAdd, announcement_link: e.target.value})}
                         />
                 </Field>
                 <Field className="pt-4 pb-4">

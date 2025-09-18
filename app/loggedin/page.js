@@ -9,6 +9,8 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { useLogin } from '../loginProvider';
 
 
+
+
 const pages = [
     { name: 'Teams & Rosters', link: "./adminTeams" },
     { name: 'Schedules', link: "./adminSchedules" },
@@ -17,6 +19,7 @@ const pages = [
     { name: 'Sponsors', link: "./adminSponsors" },
     { name: 'Announcements', link: "./adminAnnouncements" }
 ]
+
 
 
 export default function Admin() {
@@ -72,12 +75,11 @@ export default function Admin() {
     }
 
     return (
-        
-        <div className="w-full bg-primroseYellow bg-opacity-50">
-            <div className="w-full flex flex-wrap flex-auto justify-center space-x-4">
+        <div className="w-full relative" >
+
                 
                 <Menu>
-                    <MenuButton className="w-full bg-myrtleGreen text-white hover:bg-myrtleGreen hover:text-primroseYellow px-4 py-2">
+                    <MenuButton className="h-fill bg-myrtleGreen text-white hover:bg-myrtleGreen hover:text-primroseYellow px-4 py-2 m-4 rounded-2xl">
                         Choose Edit Category...
                     </MenuButton>
                     <MenuItems anchor="bottom" className="bg-myrtleGreen text-white">
@@ -99,10 +101,8 @@ export default function Admin() {
                             ))}
                     </MenuItems>
                 </Menu>
-                
-                
 
             </div>
-        </div>
+            
     )
 }
