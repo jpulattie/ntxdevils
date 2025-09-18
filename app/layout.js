@@ -17,7 +17,7 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 
 const roboto = Roboto({
   variable: "--font-roboto",
-  //subsets: ["latin"],
+  subsets: ["latin"],
   weight: ["400", "700"]
 });
 
