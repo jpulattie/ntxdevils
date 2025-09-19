@@ -290,7 +290,7 @@ export default function Edit() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={JSON.stringify(item)}>
+                                    <option key={item.id} value={item}>
                                         {item.sponsor_name?.length > 30 
                                         ? item.sponsor_name.slice(0,30) + "..."
                                     : item.sponsor_name}</option>

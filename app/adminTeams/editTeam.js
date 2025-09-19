@@ -188,7 +188,7 @@ export default function Edit() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={JSON.stringify(item.team_name)}>
+                                    <option key={item.id} value={item}>
                                         {item.team_name?.length > 30 
                                         ? item.team_name.slice(0,30) + "..."
                                     : item.team_name}</option>

@@ -142,7 +142,7 @@ export default function Delete() {
                             data
                                 .filter(item => item !== null && item !== undefined)
                                 .map((item, index) => (
-                                    <option key={item.id} value={JSON.stringify(item)}>
+                                    <option key={item.id} value={item.id}>
                                         {item.announcement?.length > 30 
                                         ? item.announcement.slice(0,30) + "..."
                                     : item.announcement}</option>

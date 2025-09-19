@@ -258,6 +258,7 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
 
 
     const addEdit = async (toEdit) => {
+        window.alert(`Updating ${toEdit.event_name}`)
         await editEvent();
 
     }
@@ -407,6 +408,7 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
                         //for multiple change e.target.files[0] to Awway.from(e.target.files)
                         className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
                         placeholder="Our score - leave blank if no scoreor '0' if no points were scored"
+                        value={toEdit.team_score}
                         onChange={(e) => {
                             setToEdit({ ...toEdit, team_score: e.target.value });
                         }}
@@ -421,6 +423,8 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
                         //for multiple change e.target.files[0] to Awway.from(e.target.files)
                         className="border border-myrtleGreen px-3 py-2 h-auto pb-10 border-1"
                         placeholder="Opponent score - leave blank if no score or '0' if no points were scored"
+                        value={toEdit.opponent_score}
+
                         onChange={(e) => {
                             setToEdit({ ...toEdit, opponent_score: e.target.value });
                         }}
