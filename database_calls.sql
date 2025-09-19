@@ -411,3 +411,22 @@ order by
     --listagg(team.team_name, ' ') as team
     --GROUP_CONCAT(DISTINCT team.team_name ORDER BY team.team_name SEPARATOR ' + ') AS teams,
     --event_name;
+
+    query insert into roster (
+        team_id,
+         player_name,
+         position, grade,
+          year_playing,
+           bio,
+            picture,
+             picture_key,
+              sponsor_link)
+              values (1,
+               "Test",
+                "",
+                 "",
+                  null,
+                   "test",
+                    "https://ntxdevils.s3.us-east-2.amazonaws.com/rosters/19f7c70d-3f5b-4259-991c-832f747ca8e1-IMG_20220413_235615_000.jpg",
+                     "19f7c70d-3f5b-4259-991c-832f747ca8e1-IMG_20220413_235615_000.jpg",
+                      "); 

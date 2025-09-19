@@ -107,7 +107,7 @@ export default function New() {
             console.error("upload failed", data.error);
         }
         console.log('toAdd right before query', toAdd);
-        let query = `insert into roster (team_id, player_name, position, grade, year_playing, bio, picture, picture_key, sponsor_link) values (${toAdd.team_id}, "${toAdd.player_name}", "${toAdd.position}", "${toAdd.grade}", ${years}, "${toAdd.bio}", "${newURL}", "${newKey}", "${toAdd.sponsor_link}); `
+        let query = `insert into roster (team_id, player_name, position, grade, year_playing, bio, picture, picture_key, sponsor_link) values (${toAdd.team_id}, "${toAdd.player_name}", "${toAdd.position}", "${toAdd.grade}", ${years}, "${toAdd.bio}", "${newURL}", "${newKey}", "${toAdd.sponsor_link}"); `
         console.log('query', query);
 
         console.log('photo url', newURL);
