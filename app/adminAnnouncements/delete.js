@@ -61,6 +61,7 @@ export default function Delete() {
     }, []);
 
     async function deleteAnnouncement(id) {
+        console.log("id to delete is", id)
         let query = `delete from announcements where id = "${id}";`
         try {
             console.log('sending API request to route')//, api_request)
