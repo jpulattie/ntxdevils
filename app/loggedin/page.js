@@ -75,7 +75,7 @@ export default function Admin() {
     }
 
     return (
-        <div className="w-full relative" >
+        <div className="w-full" >
 
                 
                 <Menu>
