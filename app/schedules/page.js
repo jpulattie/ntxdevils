@@ -229,7 +229,7 @@ where
                                                     }
                                                    
                                                     <td className=" text-center">{new Date(item.event_date).toLocaleDateString('en-us', { month: 'short', day: 'numeric'})}</td>
-                                                    {item.opponent && item.team_score !== null ? <td className=" text-center">{item.team_score} - {item.opponent_score}</td> : <td className=" text-center"></td>}
+                                                    {item.opponent && item.team_score !== null ? <td className=" text-center whitespace-nowrap">{item.team_score}-{item.opponent_score}</td> : <td className=" text-center"></td>}
                                                     </tr>
                                                     <tr key={`${item.index}-${index}-2`} className="pt-2 pb-1 text-left md:text-lg  rounded-xl border-b-2 border-opacity-20 border-myrtleGreen">
                                                     <td colSpan={2} className=" text-center hover:text-roseRed focus:text-roseRed p-1"> {item.event_address ?
@@ -240,7 +240,7 @@ where
                                                             > View Map </a>
                                                          : <p></p>}{item.event_city ? <span> {item.event_city && item.event_address ? '-' : ''} {item.event_city}, {item.event_state}</span> : <span></span> }
                                                       </td>
-                                                    {(item.event_time === "00:00:00") ? <td className=" text-center"></td> : <td className=" text-center">{new Date(`1970-01-01T${item.event_time}`).toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}</td>}
+                                                    {(item.event_time === "00:00:00") ? <td className=" text-center"></td> : <td className="w-fit text-center">{new Date(`1970-01-01T${item.event_time}`).toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}</td>}
                                                     {item.opponent && item.result !== null && item.result !== 'null'? <td className=" text-center">{item.result}</td> : <td className=" text-center"></td>}                                                    
                                                 </tr>
                                                 </>

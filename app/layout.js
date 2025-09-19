@@ -76,7 +76,7 @@ export default function RootLayout({ children, hideNavbar = false }) {
 
 
           <header> 
-            <div className="fixed w-full md:w-[min(80%,95%)] flex flex-col justify-between items-center bg-myrtleGreen text-primroseYellow">
+            <div className="fixed w-full md:w-[min(80%,95%)] flex flex-col justify-between items-center bg-myrtleGreen text-primroseYellow overflow-hidden">
               
               <div className="flex justify-between items-center w-full p-2">
 

@@ -74,51 +74,72 @@ export default function Navbar() {
     }
 
     return (
-        <div className="w-full bg-myrtleGreen">
+        <div className="w-full overflow-hidden">
             <div className="hidden md:flex flex-wrap flex-auto bg-myrtleGreen text-white justify-center space-x-4">
-                <Menu>
-                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2 rounded-xl">
-                        Rosters
-                    </MenuButton>
-                    <MenuItems anchor="bottom">
-                        {teams
-                            .map(team => (
-                                <MenuItem
-                                    key={team.team_name}
-                                    className=" w-full bg-myrtleGreen text-white px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
-                                    as="button"
-                                    onClick={() => {
-                                        teamSelect(team.team_name);
-                                        router.push('/teams')
+                <div className="relative">
+                    <Menu>
+                        <MenuButton className="text-center bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen px-4 py-2 rounded-xl">
+                            Rosters
+                        </MenuButton>
+                        <MenuItems
+                            modal={false}
+                            anchor="bottom start"
+                        className="origin-top-left absolute w-48 rounded-md shadow-lg bg-myrtleGreen ring-1 ring-black ring-opacity-5 focus:outline-none z-[9999]"
+                            style={{
+                                position: 'fixed',
+                                transform: 'translateX(0)',
+                                maxWidth: '12rem',
+                                minWidth: '10rem'
+                            }}
+                        >
+                            {teams
+                                .map(team => (
+                                    <MenuItem
+                                        key={team.team_name}
+                                        className="bottom w-full block bg-myrtleGreen text-white px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
+                                        as="button"
+                                        onClick={() => {
+                                            teamSelect(team.team_name);
+                                            router.push('/teams')
 
-                                    }}
-                                >
-                                    {team.team_name}
-                                </MenuItem>
+                                        }}
+                                    >
+                                        {team.team_name}
+                                    </MenuItem>
 
-                            ))}
-                    </MenuItems>
-                </Menu>
+                                ))}
+                        </MenuItems>
+                    </Menu>
+                </div>
                 <Menu>
-                    <MenuButton className="rounded hover:bg-primroseYellow hover:text-myrtleGreen px-2 py-2 rounded-xl">
+                    <MenuButton className="rounded bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen px-2 py-2 rounded-xl">
                         Schedules
                     </MenuButton>
-                    <MenuItems anchor="bottom" className="w-fit data-[focus]:bg-myrtleGreen bg-myrtleGreen text-white cursor-pointer hover:bg-primroseYellow hover:text-white">
-                        {teams
-                            .map(team => (
-                                <MenuItem
-                                    key={team.team_name}
-                                    as="button"
-                                    className=" w-full bg-myrtleGreen text-white px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
-                                    onClick={() => {
-                                        teamSelect(team.team_name);
-                                        router.push(`./schedules`);
-                                    }}
-                                >
-                                    {team.team_name}
-                                </MenuItem>
+                    <MenuItems
+                        modal={false}
+                        anchor="bottom start"
+                        className="origin-top-left absolute w-48 rounded-md shadow-lg bg-myrtleGreen ring-1 ring-black ring-opacity-5 focus:outline-none z-[9999]"
+                        style={{
+                            position: 'fixed',
+                            transform: 'translateX(0)',
+                            maxWidth: '12rem',
+                            minWidth: '10rem'
+                        }}
+                    >                        {teams
+                        .map(team => (
+                            <MenuItem
+                                key={team.team_name}
+                                as="button"
+                                className=" w-full bg-myrtleGreen text-white px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
+                                onClick={() => {
+                                    teamSelect(team.team_name);
+                                    router.push(`./schedules`);
+                                }}
+                            >
+                                {team.team_name}
+                            </MenuItem>
 
-                            ))}
+                        ))}
                     </MenuItems>
                 </Menu>
                 <div className="w-fit  text-white text-center bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-4 rounded-xl">
@@ -126,7 +147,7 @@ export default function Navbar() {
                         Info
                     </Link>
                 </div>
- {/*}               <Menu>
+                {/*}               <Menu>
                     <MenuButton className="rounded-xl hover:bg-primroseYellow hover:text-myrtleGreen px-2 py-2">
                         Photos
                     </MenuButton>
@@ -227,69 +248,69 @@ export default function Navbar() {
                         </div>
                         <div className="flex flex-col items-center space-y-2 relative">
 
-                        <button
-                            className="flex items-center gap-x-2 rounded hover:bg-white hover:text-myrtleGreen px-4 py-2 space-y-2 rounded-xl"
-                            onClick={() => setIsScheduleOpen(!isScheduleOpen)}
-                            anchor="bottom">
-                            Schedules
-                            <i className={`fa ${isScheduleOpen ? "fa-chevron-up" : "fa-chevron-down"} float right `}></i>
-                        </button>
+                            <button
+                                className="flex items-center gap-x-2 rounded hover:bg-white hover:text-myrtleGreen px-4 py-2 space-y-2 rounded-xl"
+                                onClick={() => setIsScheduleOpen(!isScheduleOpen)}
+                                anchor="bottom">
+                                Schedules
+                                <i className={`fa ${isScheduleOpen ? "fa-chevron-up" : "fa-chevron-down"} float right `}></i>
+                            </button>
 
-                        {isScheduleOpen && (
-                            <div className="flex flex-col min-w-[40vw] items-center rounded-2xl bg-white px-4 py-2 space-y-1 shadow-md z-50">
-                                {teams
-                                    .map(team => (
-                                        <button
-                                            key={team.team_name}
-                                            className="block w-full bg-white text-myrtleGreen px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
-                                            as="button"
-                                            onClick={() => {
-                                                setIsMobileOpen(false)
-                                                setIsScheduleOpen(false)
-                                                teamSelect(team.team_name);
-                                                router.push('/schedules')
-                                            }}
-                                        >
-                                            {team.team_name}
-                                        </button>
+                            {isScheduleOpen && (
+                                <div className="flex flex-col min-w-[40vw] items-center rounded-2xl bg-white px-4 py-2 space-y-1 shadow-md z-50">
+                                    {teams
+                                        .map(team => (
+                                            <button
+                                                key={team.team_name}
+                                                className="block w-full bg-white text-myrtleGreen px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
+                                                as="button"
+                                                onClick={() => {
+                                                    setIsMobileOpen(false)
+                                                    setIsScheduleOpen(false)
+                                                    teamSelect(team.team_name);
+                                                    router.push('/schedules')
+                                                }}
+                                            >
+                                                {team.team_name}
+                                            </button>
 
-                                    ))}
-                            </div>
+                                        ))}
+                                </div>
 
-                        )}
+                            )}
                         </div>
                         <div className="flex flex-col min-w-[40vw] items-center space-y-2 relative">
 
-                        <button
-                            className="flex items-center gap-x-2 rounded hover:bg-white hover:text-myrtleGreen space-y-2 px-4 py-2 rounded-xl"
-                            onClick={() => setIsPhotoOpen(!isPhotoOpen)}
-                            anchor="bottom">
-                            Photos
-                            <i className={`fa ${isPhotoOpen ? "fa-chevron-up" : "fa-chevron-down"} float right `}></i>
-                        </button>
+                            <button
+                                className="flex items-center gap-x-2 rounded hover:bg-white hover:text-myrtleGreen space-y-2 px-4 py-2 rounded-xl"
+                                onClick={() => setIsPhotoOpen(!isPhotoOpen)}
+                                anchor="bottom">
+                                Photos
+                                <i className={`fa ${isPhotoOpen ? "fa-chevron-up" : "fa-chevron-down"} float right `}></i>
+                            </button>
 
-                        {isPhotoOpen && (
-                            <div className="flex flex-col items-center rounded-2xl bg-white px-4 py-2 space-y-1 shadow-md z-50">
-                                {teams
-                                    .map(team => (
-                                        <button
-                                            key={team.team_name}
-                                            className="block w-fit bg-white text-myrtleGreen px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
-                                            as="button"
-                                            onClick={() => {
-                                                setIsMobileOpen(false)
-                                                setIsPhotoOpen(false)
-                                                teamSelect(team.team_name);
-                                                router.push('/photos')
-                                            }}
-                                        >
-                                            {team.team_name}
-                                        </button>
+                            {isPhotoOpen && (
+                                <div className="flex flex-col items-center rounded-2xl bg-white px-4 py-2 space-y-1 shadow-md z-50">
+                                    {teams
+                                        .map(team => (
+                                            <button
+                                                key={team.team_name}
+                                                className="block w-fit bg-white text-myrtleGreen px-2 py-2 data-[focus]:bg-primroseYellow data-[focus]:bg-primroseYellow cursor-pointer hover:bg-primroseYellow hover:text-myrtleGreen"
+                                                as="button"
+                                                onClick={() => {
+                                                    setIsMobileOpen(false)
+                                                    setIsPhotoOpen(false)
+                                                    teamSelect(team.team_name);
+                                                    router.push('/photos')
+                                                }}
+                                            >
+                                                {team.team_name}
+                                            </button>
 
-                                    ))}
-                            </div>
+                                        ))}
+                                </div>
 
-                        )}
+                            )}
                         </div>
 
                     </div>

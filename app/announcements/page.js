@@ -48,7 +48,7 @@ export default function Announcements() {
             
             <h1 className="inline-block text-lg font-bold text-white bg-myrtleGreen justify-center rounded-xl px-3 py-2 mt-2 mb-2"><strong>Announcements</strong></h1>
             <div className="w-full flex justify-center rounded-2xl px-2 py-2 gap-x-2">
-            <div className="m:w-4/5 justify-end rounded-xl mb-4 p-2">
+            <div className="md:w-4/5 justify-end rounded-xl mb-4 p-2">
                     {data && data.length > 0 ? (
                         data
                             .filter(item => item !== null && item !== undefined)
@@ -60,7 +60,7 @@ export default function Announcements() {
                                             : <div> </div>}
                                         
                                         {item.announcement && item.announcement !== 'null' ?
-                                            <div className= "block italic">{item.announcement}</div>
+                                            <div className= "block italic whitespace-pre-line">{item.announcement}</div>
                                             : <div> </div>}
                                         {item.announcement_link && item.announcement_link !== "null" && item.announcement_link !== null ?
                                         <div><a href={`${item.announcement_link}`} target="_blank"><p className="inline-block hover:bg-myrtleGreen hover:text-white text-blue-400 px-1 rounded-lg ">View Link</p></a></div>
