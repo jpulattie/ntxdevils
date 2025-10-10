@@ -228,7 +228,7 @@ where
                                                         : ''
                                                     }
                                                    
-                                                    <td className=" text-center">{new Date(item.event_date).toLocaleDateString('en-us', { month: 'short', day: 'numeric'})}</td>
+                                                    <td className=" text-center">{new Date(item.event_date).toLocaleDateString('en-us', { month: 'short', day: 'numeric', timeZone: 'UTC'})}</td>
                                                     {item.opponent && item.team_score !== null ? <td className=" text-center whitespace-nowrap">{item.team_score}-{item.opponent_score}</td> : <td className=" text-center"></td>}
                                                     </tr>
                                                     <tr key={`${item.index}-${index}-2`} className="pt-2 pb-1 text-left md:text-lg  rounded-xl border-b-2 border-opacity-20 border-myrtleGreen">
