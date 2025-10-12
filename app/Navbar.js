@@ -180,6 +180,11 @@ export default function Navbar() {
                         Announcements
                     </Link>
                 </div>
+                <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-2 rounded-xl">
+                    <Link href="./nationals" >
+                        Nationals
+                    </Link>
+                </div>
 
             </div>
             <div className="flex flex-col space-y-2 p-1 md:hidden">
@@ -331,6 +336,11 @@ export default function Navbar() {
                             Announcements
                         </Link>
                     </div>
+                    <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-2 rounded-xl">
+                    <Link href="./nationals" >
+                        Nationals 2025
+                    </Link>
+                </div>
                 </div>
             )}
         </div>
