@@ -64,7 +64,7 @@ export default function RootLayout({ children, hideNavbar = false }) {
       <head>
         <title>NTX Devils</title>
         <meta name="description" content="NTX Aussie Rules Football Club" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" />
       </head>
 
       <body
