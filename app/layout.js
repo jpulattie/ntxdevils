@@ -64,7 +64,7 @@ export default function RootLayout({ children, hideNavbar = false }) {
       <head>
         <title>NTX Devils</title>
         <meta name="description" content="NTX Aussie Rules Football Club" />
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" href="/favicon.ico" />
       </head>
 
       <body
@@ -88,7 +88,7 @@ export default function RootLayout({ children, hideNavbar = false }) {
                 className="h-full w-auto max-h-[95px]"
                 width={180}
                 height={38}
-                sizes="(max-width: 65px) 50vw, 180px" // Optional: specify how the image scales on smaller screens
+                sizes="(max-width: 65px) 50vw, 180px" 
                 priority
               />
               </div>
