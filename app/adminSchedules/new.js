@@ -325,7 +325,7 @@ export default function New() {
                 </Field>
 
                 <Field>
-                    <Label className="block flex justify-center px-2 py-3">Event Name - leave blank if game with an opponent</Label>
+                    <Label className="block flex justify-center px-2 py-3">Event Name</Label>
                     <Input
 
                         name="title"

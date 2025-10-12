@@ -192,6 +192,17 @@ order by event.event_date, event.event_time ;`
                                                                                             </td> 
                                                         : ''
                                                     }
+                                                    {item.event_type && item.event_type === "Nationals" 
+                                                    ? <td colSpan={2} className="text-center  text-left p-1">
+                                                        <strong>{item.event_type}</strong> {item.event_type && item.event_type !== item.event_name 
+                                                                                            ? <>- {item.event_name}</>
+                                                                                            : '' } 
+                                                                                            {item.event_type && item.event_type === item.event_name 
+                                                                                            ? ( item.teams ? <>(<i>{item.teams}</i>)</> : <>(<i>{item.team_name}</i>)</>)
+                                                                                            : '' } 
+                                                                                            </td> 
+                                                        : ''
+                                                    }
                                                     {item.event_type && item.event_type === "Social" 
                                                     ? <td colSpan={2} className="text-center  text-left p-1">
                                                         <strong>{item.event_type}</strong> {item.event_type ? '-': ''} {item.event_name}</td> 
