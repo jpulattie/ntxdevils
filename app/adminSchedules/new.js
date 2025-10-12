@@ -325,12 +325,12 @@ export default function New() {
                 </Field>
 
                 <Field>
-                    <Label className="block flex justify-center px-2 py-3">Event Name</Label>
+                    <Label className="block flex justify-center px-2 py-3">Event Name - leave blank if game with an opponent</Label>
                     <Input
 
                         name="title"
                         className="border border-myrtleGreen px-3 py-1 border-1"
-                        placeholder="New event name..."
+                        placeholder="New event name...leave blank if game does not have a title"
                         value={toAdd.event_name}
                         onChange={(e) => setToAdd({ ...toAdd, event_name: e.target.value })}
                     />

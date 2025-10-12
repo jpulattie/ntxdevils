@@ -59,6 +59,8 @@ where
     team.team_name = "${teamChoice}"
 order by
     roster.player_name ASC;`
+    
+    let get_teams = `select team.team_name from team`
 
     async function get_roster() {
         try {

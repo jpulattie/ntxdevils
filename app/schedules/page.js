@@ -61,7 +61,7 @@ group by
     event.opponent_score,
     event.result
 order by
-    event.event_date;`
+    event.event_date, event.event_time;`
 
     let get_team_schedule_query = `select
     team.team_name,
@@ -84,7 +84,8 @@ left outer join
 left outer join
     team on schedule.team_id = team.id
 where
-    team.team_name = "${teamChoice}";`
+    team.team_name = "${teamChoice}"
+order by event.event_date, event.event_time ;`
 
     console.log('team choice', teamChoice);
     
@@ -132,6 +133,7 @@ where
             console.error('error:', error);
         }
     }
+    
 
     useEffect(()=> {
         if (schedule.length === 0) {
@@ -182,7 +184,7 @@ where
                                                     {item.event_type && item.event_type === "Game" 
                                                     ? <td colSpan={2} className="text-center  text-left p-1">
                                                         <strong>{item.event_type}</strong> {item.event_type && item.event_type !== item.event_name 
-                                                                                            ? <>- {item.event_name} (<i>{item.teams ? item.teams : item.team_name}</i>)</>
+                                                                                            ? <>- {item.event_name}</>
                                                                                             : '' } 
                                                                                             {item.event_type && item.event_type === item.event_name 
                                                                                             ? ( item.teams ? <>(<i>{item.teams}</i>)</> : <>(<i>{item.team_name}</i>)</>)

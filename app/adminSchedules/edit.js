@@ -312,7 +312,7 @@ result = "${toEdit.result}" where id = ${toEdit.id};`
                     </Select>
                 </Field>
                 <Field>
-                    <Label className="block flex justify-center px-2 py-3">Event Name</Label>
+                    <Label className="block flex justify-center px-2 py-3">Event Name - leave blank if game with an opponent</Label>
                     <Input
 
                         name="title"
