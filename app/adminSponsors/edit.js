@@ -280,8 +280,9 @@ export default function Edit() {
                         onChange={(e) => {
                             const selectedIndex = e.target.selectedIndex
                             console.log('INDEX CHOSEN', selectedIndex)
+                            const selectedItem = data.find(item => item.id.toString() === e.target.value);
                             setIndex(selectedIndex);
-                            editSelect(e)
+                            editSelect(selectedItem)
                         }}
                     >
                        
