@@ -208,8 +208,8 @@ export default function Edit() {
     }, []);
 
 
-    const editSelect = (event) => {
-        const selection = JSON.parse(event.target.value);
+    const editSelect = (selection) => {
+        //const selection = JSON.parse(event.target.value);
         console.log('selection', selection);
         setToEdit({
             id: selection.id,
