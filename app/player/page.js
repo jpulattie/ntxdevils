@@ -8,6 +8,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { usePlayer } from '../playerChoice';
 import { useRouter } from 'next/navigation';
 import Navbar from "../Navbar";
+import SponsorForm from '../SponsorForm';
 
 //example of searching google maps for 4502 pershing ave ft worth tx
 //https://www.google.com/maps/search/?api=1&query=4502+Pershing+Ave+Fort+Worth+TX
@@ -73,10 +74,8 @@ export default function Player() {
                                         </div>
                                         : <p></p>
                                     }
-                                    {player.sponsor_link && player.player_name ? 
-                                        <div>
-                                            <a href={`${player.sponsor_link}`} target="_blank">
-                                            <p className="inline-block hover:text-roseRed text-lg font-bold hover:bg-myrtleGreen hover:text-white rounded-2xl text-myrtleGreen p-2 rounded italic">Sponsor {player.player_name} </p></a></div>
+                                    {player.id && player.player_name ?
+                                        <SponsorForm rosterId={player.id} playerName={player.player_name} />
                                     : null}
 
                                     {player.bio ?
@@ -85,7 +84,7 @@ export default function Player() {
                                     }
                                     <button
                                         onClick={() => router.back()}
-                                        className="px-4 py-2 bg-myrtleGreen text-white rounded hover:bg-white hover:text-myrtleGreen"
+                                        className="mt-4 px-4 py-2 bg-myrtleGreen text-white rounded border-2 border-myrtleGreen hover:bg-white hover:text-myrtleGreen"
                                     >
                                         Back
                                     </button>

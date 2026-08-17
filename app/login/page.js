@@ -11,12 +11,7 @@ import { useLogin } from '../loginProvider.js'
 
 
 const pages = [
-    { name: 'Teams', link: "./adminTeams" },
-    { name: 'Schedules', link: "./adminSchedules" },
-    { name: 'Info', link: "./adminInfo" },
-    { name: 'Photos', link: "./adminPhotos" },
-    { name: 'Sponsors', link: "./adminSponsors" },
-    { name: 'Announcements', link: "./adminAnnouncements" }
+    { name: 'Admin Panel', link: "./adminPortal" },
 ]
 
 
@@ -39,7 +34,7 @@ export default function Admin() {
         if (username === process.env.NEXT_PUBLIC_USERNAME && password === process.env.NEXT_PUBLIC_PASSWORD) {
             console.log('LOGGING IN');
             setLogin(true)
-            router.push('/loggedin')
+            router.push('/adminPortal')
         } else {
             alert(message);
         }
