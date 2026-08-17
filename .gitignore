@@ -51,3 +51,7 @@ next-env.d.ts
 
 
 .env*.local
+
+
+# claude code local session state
+.claude/

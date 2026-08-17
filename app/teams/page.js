@@ -24,6 +24,7 @@ export default function Roster() {
 
 
     let get_roster_query = `select
+    roster.id,
     team.team_name,
     roster.player_name,
     roster.position,
@@ -41,6 +42,7 @@ order by
     roster.player_name ASC;`
 
     let get_team_roster_query = `select
+    roster.id,
     team.team_name,
     roster.player_name,
     roster.position,

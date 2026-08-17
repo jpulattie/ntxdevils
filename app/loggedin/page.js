@@ -12,12 +12,7 @@ import { useLogin } from '../loginProvider';
 
 
 const pages = [
-    { name: 'Teams & Rosters', link: "./adminTeams" },
-    { name: 'Schedules', link: "./adminSchedules" },
-    { name: 'Info', link: "./adminInfo" },
-    { name: 'Photos', link: "./adminPhotos" },
-    { name: 'Sponsors', link: "./adminSponsors" },
-    { name: 'Announcements', link: "./adminAnnouncements" }
+    { name: 'Admin Panel', link: "./adminPortal" },
 ]
 
 
