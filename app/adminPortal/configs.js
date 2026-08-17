@@ -177,7 +177,7 @@ export const TABS = [
     { key: 'players', label: 'Roster', config: { title: 'Players', apiSlug: 'players', pkField: 'id', searchPlaceholder: 'Search by player or team...', columns: PLAYERS_COLUMNS } },
     { key: 'schedules', label: 'Schedules', config: { title: 'Schedules', apiSlug: 'schedules', pkField: 'id', searchPlaceholder: 'Search by event name or opponent...', columns: SCHEDULES_COLUMNS } },
     { key: 'sponsorships', label: 'Sponsorships', config: { title: 'Sponsorships', apiSlug: 'sponsorships', pkField: 'id', searchPlaceholder: 'Search by player or sponsor...', columns: SPONSORSHIPS_COLUMNS, confirmField: 'sponsorship_status', confirmValue: 'club_confirmed', rejectValue: 'club_rejected', exportUrl: '/api/adminData/sponsorships/export', tightRows: true } },
-    { key: 'dues', label: 'Dues', config: { title: 'Dues', apiSlug: 'dues', pkField: 'id', searchPlaceholder: 'Search by player or team...', columns: DUES_COLUMNS, tightRows: true, zebraRows: true } },
+    { key: 'dues', label: 'Dues', config: { title: 'Dues', apiSlug: 'dues', pkField: 'id', searchPlaceholder: 'Search by player or team...', columns: DUES_COLUMNS, tightRows: true, zebraRows: true, exportUrl: '/api/adminData/dues/export' } },
     { key: 'announcements', label: 'Announcements', config: { title: 'Announcements', apiSlug: 'announcements', pkField: 'id', searchPlaceholder: 'Search announcements...', columns: ANNOUNCEMENTS_COLUMNS } },
     { key: 'info', label: 'Info', config: { title: 'Info', apiSlug: 'info', pkField: 'id', searchPlaceholder: 'Search info...', columns: INFO_COLUMNS } },
     { key: 'sponsors', label: 'Sponsors', config: { title: 'Sponsors', apiSlug: 'sponsors', pkField: 'id', searchPlaceholder: 'Search sponsors...', columns: SPONSORS_COLUMNS } },
