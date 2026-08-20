@@ -451,17 +451,15 @@ export default function SponsorForm({ rosterId, playerName }) {
 
                 {method === 'venmo' ? (
                     <p className="text-sm text-gray-600 text-center">
-                        {venmoLink ? 'After sending payment in Venmo, confirm on the next page of this browser window.' : "Venmo isn't configured yet — ask the club for their Venmo handle."}
+                        After sending payment in Venmo, confirm on the next page of this browser window.
                     </p>
                 ) : method === 'zelle' ? (
                     <p className="text-sm text-gray-600 text-center">
-                        {zelleContact
-                            ? <>Send ${numericAmount || '__'} via Zelle to: <strong>{zelleContact}</strong></>
-                            : "Zelle isn't configured yet — ask the club for their Zelle info."}
+                        Send ${numericAmount || '__'} via Zelle to: <strong>{zelleContact}</strong>
                     </p>
                 ) : method === 'paypal' ? (
                     <p className="text-sm text-gray-600 text-center">
-                        {paypalLink ? 'After sending payment via PayPal, confirm on the next page of this browser window.' : "PayPal isn't configured yet — ask the club for their PayPal.me link."}
+                        After sending payment via PayPal, confirm on the next page of this browser window.
                     </p>
                 ) : null}
 
