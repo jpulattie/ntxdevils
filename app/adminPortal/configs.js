@@ -74,12 +74,14 @@ export const PHOTO_FACE_MATCHES_COLUMNS = [
     { key: 'id', label: 'ID', type: 'number', tableCol: true, editable: false, narrow: true, section: 'General' },
     { key: 'photo_url', label: 'Photo', type: 'image', tableCol: true, editable: false, section: 'General' },
     {
-        // inlineEditable renders this as a live dropdown right in the row (rather than the usual
-        // read-only cell) so an admin can pick/correct the player before clicking Confirm --
+        // inlineEditable renders this as a live multiselect right in the row (rather than the usual
+        // read-only cell) so an admin can pick/correct the suggested player, or tag other players
+        // visible in the same photo that no face row matched, before clicking Confirm --
         // Confirm/Reject replace the normal Edit modal on this tab (confirmField), so there's no
-        // other place to change this value first.
-        key: 'roster_id', label: 'Suggested Player', type: 'select', optionsKey: 'players', optionLabel: 'player_name',
-        tableCol: true, inlineEditable: true, section: 'General',
+        // other place to change this value first. Seeded from roster_id (Rekognition's single
+        // suggestion) via roster_ids in resources.js's list().
+        key: 'roster_ids', label: 'Player(s) to Tag', type: 'multiselect', optionsKey: 'players', optionLabel: 'player_name',
+        dataField: 'roster_ids', tableCol: true, inlineEditable: true, section: 'General',
     },
     {
         key: 'similarity', label: 'Confidence', type: 'number', tableCol: true, editable: false, section: 'General',
@@ -205,5 +207,5 @@ export const TABS = [
     { key: 'info', label: 'Info', config: { title: 'Info', apiSlug: 'info', pkField: 'id', searchPlaceholder: 'Search info...', columns: INFO_COLUMNS } },
     { key: 'sponsors', label: 'Sponsors', config: { title: 'Sponsors', apiSlug: 'sponsors', pkField: 'id', searchPlaceholder: 'Search sponsors...', columns: SPONSORS_COLUMNS } },
     { key: 'photos', label: 'Photos', config: { title: 'Photos', apiSlug: 'photos', pkField: 'id', searchPlaceholder: 'Search photos by tag...', columns: PHOTOS_COLUMNS } },
-    { key: 'faceReview', label: 'Face Review', config: { title: 'Face Matches', apiSlug: 'photoFaceMatches', pkField: 'id', searchPlaceholder: 'Search by player name...', columns: PHOTO_FACE_MATCHES_COLUMNS, confirmField: 'match_status', confirmValue: 'club_confirmed', rejectValue: 'club_rejected', tightRows: true } },
+    { key: 'faceReview', label: 'Face Review', config: { title: 'Face Matches', apiSlug: 'photoFaceMatches', pkField: 'id', searchPlaceholder: 'Search by player name...', columns: PHOTO_FACE_MATCHES_COLUMNS, confirmField: 'match_status', confirmValue: 'club_confirmed', rejectValue: 'club_rejected', tightRows: true, hideAddButton: true } },
 ];

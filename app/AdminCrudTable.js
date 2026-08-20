@@ -33,14 +33,17 @@ async function uploadFile(file, folder) {
  *     dataField,       // multiselect only -- array field name sent to the API (e.g. 'team_ids')
  *     imageFolder,      // image only -- S3 folder to upload into
  *     keyField,         // image only -- companion column that stores the S3 key, if any
- *     inlineEditable,   // select only, requires config.confirmField -- renders as a live dropdown
- *                       // in the row itself instead of a read-only cell, since confirmField tabs
- *                       // replace the Edit modal with Confirm/Reject buttons
+ *     inlineEditable,   // select or multiselect only, requires config.confirmField -- renders as a
+ *                       // live dropdown (single or multi) in the row itself instead of a read-only
+ *                       // cell, since confirmField tabs replace the Edit modal with Confirm/Reject
  *   }]
  * }
  * options: { teams: [...], players: [...], events: [...] } -- reference data for selects
  * tab-level config flags: confirmField/confirmValue/rejectValue, tightRows, zebraRows, exportUrl,
- * syncFacesButton (POSTs /api/rekognition/syncFaces with no body, for the Players tab)
+ * syncFacesButton (POSTs /api/rekognition/syncFaces with no body, for the Players tab),
+ * hideAddButton (Face Review tab -- the generic "+ Add" create-row form makes no sense for a
+ * resource that only ever gets rows from the bulk-upload recognition pipeline; a bespoke
+ * ReenrollPlayerFace component supplies its own "+" action there instead)
  */
 export default function AdminCrudTable({ config, options = {} }) {
     const { title, apiSlug, pkField, searchPlaceholder, columns } = config;
@@ -363,12 +366,14 @@ export default function AdminCrudTable({ config, options = {} }) {
                     onChange={(e) => setSearch(e.target.value)}
                     className={`${inputClass} flex-1 min-w-[200px]`}
                 />
-                <button
-                    onClick={() => { setActionErr(null); setEditRow({}); }}
-                    className="px-4 py-2 rounded-xl bg-myrtleGreen text-white font-bold whitespace-nowrap"
-                >
-                    + Add {title.replace(/s$/, '')}
-                </button>
+                {!config.hideAddButton && (
+                    <button
+                        onClick={() => { setActionErr(null); setEditRow({}); }}
+                        className="px-4 py-2 rounded-xl bg-myrtleGreen text-white font-bold whitespace-nowrap"
+                    >
+                        + Add {title.replace(/s$/, '')}
+                    </button>
+                )}
                 {config.exportUrl && (
                     <a
                         href={config.exportUrl}
@@ -472,7 +477,20 @@ export default function AdminCrudTable({ config, options = {} }) {
                                 <div className={`flex ${zebraClass} text-sm ${rejectedClass}`}>
                                     {tableCols.map((col) => (
                                         <div key={col.key} className={`${colWidthClass(col)} px-3 py-2 truncate text-center`}>
-                                            {col.inlineEditable && config.confirmField ? (
+                                            {col.inlineEditable && config.confirmField && col.type === 'multiselect' ? (
+                                                <select
+                                                    multiple
+                                                    value={(row[col.dataField] || []).map(String)}
+                                                    onChange={(e) => updateRowField(row, col.dataField, Array.from(e.target.selectedOptions).map((o) => Number(o.value)))}
+                                                    className="border border-myrtleGreen rounded px-1 py-0.5 text-xs w-full h-16"
+                                                >
+                                                    {optionsFor(col).map((o) => (
+                                                        <option key={o[col.optionValue || 'id']} value={o[col.optionValue || 'id']}>
+                                                            {o[col.optionLabel]}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            ) : col.inlineEditable && config.confirmField ? (
                                                 <select
                                                     value={row[col.key] ?? ''}
                                                     onChange={(e) => updateRowField(row, col.key, e.target.value === '' ? null : Number(e.target.value))}

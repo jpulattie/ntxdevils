@@ -289,26 +289,36 @@ const RESOURCES = {
                 params.push(`%${search}%`);
             }
             sql += ` order by (pfm.match_status = 'pending') desc, pfm.created_at desc`;
-            return query(sql, params);
+            const rows = await query(sql, params);
+            // Seeds the inline multiselect with Rekognition's single suggested match -- the admin can
+            // add more players (someone else visible in the same photo that no face row matched) or
+            // remove the suggestion entirely before confirming.
+            return rows.map((row) => ({ ...row, roster_ids: row.roster_id ? [row.roster_id] : [] }));
         },
 
+        // roster_ids (plural) drives tagging here, not the single roster_id column -- Confirm can
+        // tag the photo to every player selected in the row's multiselect, not just the one face
+        // Rekognition matched. roster_id itself is only updated to the first selection, as a plain
+        // record of "what this row currently points at" for display/search purposes.
         async update(id, body) {
-            const rosterId = toNull(body.roster_id);
+            const rosterIds = Array.isArray(body.roster_ids) ? body.roster_ids : (toNull(body.roster_id) ? [body.roster_id] : []);
             const matchStatus = body.match_status;
-            await query('update photo_face_match set roster_id = ?, match_status = ? where id = ?', [rosterId, matchStatus, id]);
+            await query('update photo_face_match set roster_id = ?, match_status = ? where id = ?', [rosterIds[0] ?? null, matchStatus, id]);
 
-            if (matchStatus === 'club_confirmed' && rosterId) {
+            if (matchStatus === 'club_confirmed' && rosterIds.length > 0) {
                 const rows = await query('select photo_id from photo_face_match where id = ?', [id]);
                 const photoId = rows[0]?.photo_id;
-                // Guard against a duplicate photo_intersection row if Confirm is clicked twice
-                // (e.g. a retried request) -- check before inserting rather than relying on a
-                // unique constraint that doesn't exist on this table.
-                const existing = await query(
-                    'select id from photo_intersection where photo_id = ? and roster_id = ?',
-                    [photoId, rosterId]
-                );
-                if (existing.length === 0) {
-                    await query('insert into photo_intersection (photo_id, roster_id) values (?, ?)', [photoId, rosterId]);
+                for (const rosterId of rosterIds) {
+                    // Guard against a duplicate photo_intersection row if Confirm is clicked twice
+                    // (e.g. a retried request) -- check before inserting rather than relying on a
+                    // unique constraint that doesn't exist on this table.
+                    const existing = await query(
+                        'select id from photo_intersection where photo_id = ? and roster_id = ?',
+                        [photoId, rosterId]
+                    );
+                    if (existing.length === 0) {
+                        await query('insert into photo_intersection (photo_id, roster_id) values (?, ?)', [photoId, rosterId]);
+                    }
                 }
             }
         },

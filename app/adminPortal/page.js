@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useLogin } from '../loginProvider';
 import AdminCrudTable from '../AdminCrudTable';
 import BulkPhotoUpload from './BulkPhotoUpload';
+import ReenrollPlayerFace from './ReenrollPlayerFace';
 import { TABS } from './configs';
 
 export default function AdminPortal() {
@@ -77,6 +78,9 @@ export default function AdminPortal() {
                         events={options.events}
                         onUploaded={() => setPhotosRefreshTick((t) => t + 1)}
                     />
+                )}
+                {activeTab === 'faceReview' && (
+                    <ReenrollPlayerFace players={options.players} />
                 )}
                 <AdminCrudTable key={`${activeTab}-${photosRefreshTick}`} config={activeConfig} options={options} />
             </div>
