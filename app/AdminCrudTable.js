@@ -54,6 +54,7 @@ export default function AdminCrudTable({ config, options = {} }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editRow, setEditRow] = useState(null);
+    const [lightboxUrl, setLightboxUrl] = useState(null);
     const [confirmDel, setConfirmDel] = useState(null);
     const [actionErr, setActionErr] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
@@ -88,7 +89,14 @@ export default function AdminCrudTable({ config, options = {} }) {
         if (col.render) return col.render(val, row);
         if (val === null || val === undefined || val === '') return <span className="text-gray-400">—</span>;
         if (col.type === 'select') return String(labelFor(col, val));
-        if (col.type === 'image') return <img src={val} alt="" className="w-10 h-10 object-cover rounded" />;
+        if (col.type === 'image') return (
+            <img
+                src={val}
+                alt=""
+                onClick={() => setLightboxUrl(val)}
+                className="w-10 h-10 object-cover rounded cursor-zoom-in mx-auto"
+            />
+        );
         return String(val);
     };
 
@@ -308,6 +316,24 @@ export default function AdminCrudTable({ config, options = {} }) {
         );
     }
 
+    function Lightbox() {
+        if (!lightboxUrl) return null;
+        return (
+            <div
+                className="fixed inset-0 bg-black/80 z-[300] flex items-center justify-center p-4"
+                onClick={() => setLightboxUrl(null)}
+            >
+                <img src={lightboxUrl} alt="" className="max-w-full max-h-full rounded-lg shadow-2xl" />
+                <button
+                    onClick={() => setLightboxUrl(null)}
+                    className="absolute top-4 right-4 text-white text-3xl leading-none"
+                >
+                    ✕
+                </button>
+            </div>
+        );
+    }
+
     function DeleteModal() {
         if (!confirmDel) return null;
         return (
@@ -485,6 +511,7 @@ export default function AdminCrudTable({ config, options = {} }) {
 
             <EditModal />
             <DeleteModal />
+            <Lightbox />
         </div>
     );
 }
