@@ -21,6 +21,7 @@ export default function Player() {
     const { player, setPlayer } = usePlayer();
     //const { teamChoice, setTeamChoice } = useTeam(null);
     const [loading, setLoading] = useState();
+    const [photos, setPhotos] = useState([]);
     let query;
     let get_teams_query = `select team_name from team;`
     const router = useRouter();
@@ -33,6 +34,14 @@ export default function Player() {
             router.replace('/teams');
         }
     }, [player]);
+
+    useEffect(() => {
+        if (!player?.id) return;
+        fetch(`/api/playerPhotos?rosterId=${player.id}`)
+            .then((res) => res.json())
+            .then((data) => setPhotos((data.photos || []).sort(() => Math.random() - 0.5)))
+            .catch((err) => console.error('playerPhotos fetch error:', err));
+    }, [player?.id]);
 
     if (!player) {
         return <p>Redirecting to team selection...</p>;
@@ -74,6 +83,18 @@ export default function Player() {
                                         </div>
                                         : <p></p>
                                     }
+                                    {photos.length > 0 ? (
+                                        <div className="flex overflow-x-auto gap-2 pb-2 pt-2">
+                                            {photos.map((url, i) => (
+                                                <img
+                                                    key={i}
+                                                    src={url}
+                                                    className="w-32 h-32 object-cover rounded-xl flex-none"
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : null}
+
                                     {player.id && player.player_name ?
                                         <SponsorForm rosterId={player.id} playerName={player.player_name} />
                                     : null}

@@ -33,9 +33,14 @@ async function uploadFile(file, folder) {
  *     dataField,       // multiselect only -- array field name sent to the API (e.g. 'team_ids')
  *     imageFolder,      // image only -- S3 folder to upload into
  *     keyField,         // image only -- companion column that stores the S3 key, if any
+ *     inlineEditable,   // select only, requires config.confirmField -- renders as a live dropdown
+ *                       // in the row itself instead of a read-only cell, since confirmField tabs
+ *                       // replace the Edit modal with Confirm/Reject buttons
  *   }]
  * }
  * options: { teams: [...], players: [...], events: [...] } -- reference data for selects
+ * tab-level config flags: confirmField/confirmValue/rejectValue, tightRows, zebraRows, exportUrl,
+ * syncFacesButton (POSTs /api/rekognition/syncFaces with no body, for the Players tab)
  */
 export default function AdminCrudTable({ config, options = {} }) {
     const { title, apiSlug, pkField, searchPlaceholder, columns } = config;
@@ -146,6 +151,30 @@ export default function AdminCrudTable({ config, options = {} }) {
             load();
         } catch (e) {
             setActionErr(e.message || 'Delete failed');
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    function updateRowField(row, key, value) {
+        setRows((prev) => prev.map((r) => (r[pkField] === row[pkField] ? { ...r, [key]: value } : r)));
+    }
+
+    async function handleSyncFaces() {
+        if (saving) return;
+        setActionErr(null);
+        setSaving(true);
+        try {
+            const data = await apiFetch('/api/rekognition/syncFaces', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({}),
+            });
+            const errCount = data.errors?.length || 0;
+            flash(`Synced ${data.synced?.length || 0} player face(s)${errCount ? `, ${errCount} error(s)` : ''}`);
+            load();
+        } catch (e) {
+            setActionErr(e.message || 'Sync failed');
         } finally {
             setSaving(false);
         }
@@ -322,6 +351,15 @@ export default function AdminCrudTable({ config, options = {} }) {
                         Export to Excel
                     </a>
                 )}
+                {config.syncFacesButton && (
+                    <button
+                        onClick={handleSyncFaces}
+                        disabled={saving}
+                        className="px-4 py-2 rounded-xl bg-myrtleGreen text-white font-bold whitespace-nowrap disabled:opacity-50"
+                    >
+                        {saving ? 'Syncing...' : 'Sync Faces'}
+                    </button>
+                )}
             </div>
 
             {successMsg && <div className="bg-green-50 border border-green-300 rounded p-2 mb-2 text-sm text-green-800">✓ {successMsg}</div>}
@@ -407,7 +445,22 @@ export default function AdminCrudTable({ config, options = {} }) {
                             <div key={row[pkField] ?? i} className="rounded-xl border border-myrtleGreen/30 overflow-hidden shadow-sm">
                                 <div className={`flex ${zebraClass} text-sm ${rejectedClass}`}>
                                     {tableCols.map((col) => (
-                                        <div key={col.key} className={`${colWidthClass(col)} px-3 py-2 truncate text-center`}>{renderCell(col, row[col.key], row)}</div>
+                                        <div key={col.key} className={`${colWidthClass(col)} px-3 py-2 truncate text-center`}>
+                                            {col.inlineEditable && config.confirmField ? (
+                                                <select
+                                                    value={row[col.key] ?? ''}
+                                                    onChange={(e) => updateRowField(row, col.key, e.target.value === '' ? null : Number(e.target.value))}
+                                                    className="border border-myrtleGreen rounded px-1 py-0.5 text-xs w-full"
+                                                >
+                                                    <option value="">(none)</option>
+                                                    {optionsFor(col).map((o) => (
+                                                        <option key={o[col.optionValue || 'id']} value={o[col.optionValue || 'id']}>
+                                                            {o[col.optionLabel]}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            ) : renderCell(col, row[col.key], row)}
+                                        </div>
                                     ))}
                                     {primaryActionsCell}
                                 </div>

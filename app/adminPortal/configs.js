@@ -66,8 +66,31 @@ export const PHOTOS_COLUMNS = [
     { key: 'player_name', label: 'Tagged Player', type: 'text', tableCol: true, editable: false, section: 'General' },
     { key: 'event_name', label: 'Tagged Event', type: 'text', tableCol: true, editable: false, section: 'General' },
     { key: 'team_id', label: 'Tag: Team', type: 'select', optionsKey: 'teams', optionLabel: 'team_name', section: 'Tagging' },
-    { key: 'roster_id', label: 'Tag: Player', type: 'select', optionsKey: 'players', optionLabel: 'player_name', section: 'Tagging' },
+    { key: 'roster_ids', label: 'Tag: Players (select one or more)', type: 'multiselect', optionsKey: 'players', optionLabel: 'player_name', dataField: 'roster_ids', section: 'Tagging' },
     { key: 'event_id', label: 'Tag: Event', type: 'select', optionsKey: 'events', optionLabel: 'label', section: 'Tagging' },
+];
+
+export const PHOTO_FACE_MATCHES_COLUMNS = [
+    { key: 'id', label: 'ID', type: 'number', tableCol: true, editable: false, narrow: true, section: 'General' },
+    { key: 'photo_url', label: 'Photo', type: 'image', tableCol: true, editable: false, section: 'General' },
+    {
+        // inlineEditable renders this as a live dropdown right in the row (rather than the usual
+        // read-only cell) so an admin can pick/correct the player before clicking Confirm --
+        // Confirm/Reject replace the normal Edit modal on this tab (confirmField), so there's no
+        // other place to change this value first.
+        key: 'roster_id', label: 'Suggested Player', type: 'select', optionsKey: 'players', optionLabel: 'player_name',
+        tableCol: true, inlineEditable: true, section: 'General',
+    },
+    {
+        key: 'similarity', label: 'Confidence', type: 'number', tableCol: true, editable: false, section: 'General',
+        render: (val) => (val === null || val === undefined ? <span className="text-gray-400">—</span> : `${Number(val).toFixed(1)}%`),
+    },
+    {
+        key: 'created_at', label: 'Detected', type: 'text', tableCol: true, editable: false, section: 'General',
+        render: (val) => (val
+            ? new Date(val).toLocaleString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+            : <span className="text-gray-400">—</span>),
+    },
 ];
 
 const PAYMENT_METHOD_OPTIONS = [
@@ -174,7 +197,7 @@ export const DUES_COLUMNS = [
 
 export const TABS = [
     { key: 'teams', label: 'Teams', config: { title: 'Teams', apiSlug: 'teams', pkField: 'id', searchPlaceholder: 'Search by team name...', columns: TEAMS_COLUMNS } },
-    { key: 'players', label: 'Roster', config: { title: 'Players', apiSlug: 'players', pkField: 'id', searchPlaceholder: 'Search by player or team...', columns: PLAYERS_COLUMNS } },
+    { key: 'players', label: 'Roster', config: { title: 'Players', apiSlug: 'players', pkField: 'id', searchPlaceholder: 'Search by player or team...', columns: PLAYERS_COLUMNS, syncFacesButton: true } },
     { key: 'schedules', label: 'Schedules', config: { title: 'Schedules', apiSlug: 'schedules', pkField: 'id', searchPlaceholder: 'Search by event name or opponent...', columns: SCHEDULES_COLUMNS } },
     { key: 'sponsorships', label: 'Sponsorships', config: { title: 'Sponsorships', apiSlug: 'sponsorships', pkField: 'id', searchPlaceholder: 'Search by player or sponsor...', columns: SPONSORSHIPS_COLUMNS, confirmField: 'sponsorship_status', confirmValue: 'club_confirmed', rejectValue: 'club_rejected', exportUrl: '/api/adminData/sponsorships/export', tightRows: true } },
     { key: 'dues', label: 'Dues', config: { title: 'Dues', apiSlug: 'dues', pkField: 'id', searchPlaceholder: 'Search by player or team...', columns: DUES_COLUMNS, tightRows: true, zebraRows: true, exportUrl: '/api/adminData/dues/export' } },
@@ -182,4 +205,5 @@ export const TABS = [
     { key: 'info', label: 'Info', config: { title: 'Info', apiSlug: 'info', pkField: 'id', searchPlaceholder: 'Search info...', columns: INFO_COLUMNS } },
     { key: 'sponsors', label: 'Sponsors', config: { title: 'Sponsors', apiSlug: 'sponsors', pkField: 'id', searchPlaceholder: 'Search sponsors...', columns: SPONSORS_COLUMNS } },
     { key: 'photos', label: 'Photos', config: { title: 'Photos', apiSlug: 'photos', pkField: 'id', searchPlaceholder: 'Search photos by tag...', columns: PHOTOS_COLUMNS } },
+    { key: 'faceReview', label: 'Face Review', config: { title: 'Face Matches', apiSlug: 'photoFaceMatches', pkField: 'id', searchPlaceholder: 'Search by player name...', columns: PHOTO_FACE_MATCHES_COLUMNS, confirmField: 'match_status', confirmValue: 'club_confirmed', rejectValue: 'club_rejected', tightRows: true } },
 ];

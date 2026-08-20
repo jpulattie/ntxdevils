@@ -43,6 +43,11 @@ CREATE TABLE IF NOT EXISTS roster(
     picture TEXT,
     picture_key TEXT,
     sponsor_link TEXT,
+    -- face-recognition enrollment state (see photo_face_match below): rekognition_face_id is the
+    -- FaceId Rekognition returns after IndexFaces on this player's picture; face_enrolled_at drives
+    -- "needs re-sync" UI state (null = never enrolled) in the admin Players tab's "Sync Faces" action.
+    rekognition_face_id VARCHAR(225),
+    face_enrolled_at TIMESTAMP NULL,
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
 );
 
@@ -144,5 +149,28 @@ CREATE TABLE IF NOT EXISTS dues(
     dues_paid BOOLEAN NOT NULL DEFAULT FALSE,
     dues_partial BOOLEAN NOT NULL DEFAULT FALSE,
     dues_amount_paid DECIMAL(10,2),
+    FOREIGN KEY (roster_id) REFERENCES roster(id) ON DELETE CASCADE
+);
+
+-- Review queue for face-recognition candidates from bulk photo uploads that weren't confident
+-- enough to auto-tag (see app/api/rekognition/bulkUploadPhotos). roster_id is nullable: a face can
+-- be detected with no confident Rekognition match at all, in which case it's still queued here
+-- (bounding box only) so an admin can assign a name manually via the Face Review admin tab.
+-- match_status follows the same plain-VARCHAR lifecycle-field convention as
+-- player_sponsorships.sponsorship_status above: 'pending' / 'club_confirmed' / 'club_rejected'.
+-- Confirming inserts a row into photo_intersection; this table is never read by the player-facing
+-- photo gallery, only by the admin review tab.
+CREATE TABLE IF NOT EXISTS photo_face_match(
+    id INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
+    photo_id INT NOT NULL,
+    roster_id INT,
+    similarity DECIMAL(5,2),
+    face_left INT,
+    face_top INT,
+    face_width INT,
+    face_height INT,
+    match_status VARCHAR(225) NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (photo_id) REFERENCES photo(id) ON DELETE CASCADE,
     FOREIGN KEY (roster_id) REFERENCES roster(id) ON DELETE CASCADE
 );

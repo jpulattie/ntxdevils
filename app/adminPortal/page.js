@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLogin } from '../loginProvider';
 import AdminCrudTable from '../AdminCrudTable';
+import BulkPhotoUpload from './BulkPhotoUpload';
 import { TABS } from './configs';
 
 export default function AdminPortal() {
@@ -12,6 +13,9 @@ export default function AdminPortal() {
     const [activeTab, setActiveTab] = useState(TABS[0].key);
     const [options, setOptions] = useState({ teams: [], players: [], events: [] });
     const [refError, setRefError] = useState(null);
+    // Bumped after a bulk photo upload to force AdminCrudTable to remount and refetch, since it
+    // manages its own row state internally with no externally-callable reload.
+    const [photosRefreshTick, setPhotosRefreshTick] = useState(0);
 
     useEffect(() => {
         if (!login) router.push('/');
@@ -67,7 +71,14 @@ export default function AdminPortal() {
             </div>
 
             <div className="px-4 py-6">
-                <AdminCrudTable key={activeTab} config={activeConfig} options={options} />
+                {activeTab === 'photos' && (
+                    <BulkPhotoUpload
+                        teams={options.teams}
+                        events={options.events}
+                        onUploaded={() => setPhotosRefreshTick((t) => t + 1)}
+                    />
+                )}
+                <AdminCrudTable key={`${activeTab}-${photosRefreshTick}`} config={activeConfig} options={options} />
             </div>
         </div>
     );

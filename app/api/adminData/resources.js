@@ -217,9 +217,18 @@ const RESOURCES = {
         pk: 'id',
         required: ['photo_url'],
 
+        // One row per photo even though photo_intersection can now hold multiple roster tags per
+        // photo (multi-person tagging) -- GROUP_CONCAT collapses the joined tag rows back down so
+        // the admin table doesn't show the same photo once per tagged player. roster_ids/team_id/
+        // event_id are parsed back into plain values in JS below for the edit form to consume.
         async list(search) {
             let sql = `select photo.id, photo.photo_url,
-                    pi.team_id, t.team_name, pi.roster_id, r.player_name, pi.event_id, ev.event_name
+                    GROUP_CONCAT(DISTINCT t.team_name SEPARATOR ', ') as team_name,
+                    GROUP_CONCAT(DISTINCT r.player_name SEPARATOR ', ') as player_name,
+                    GROUP_CONCAT(DISTINCT ev.event_name SEPARATOR ', ') as event_name,
+                    GROUP_CONCAT(DISTINCT pi.team_id) as team_ids_csv,
+                    GROUP_CONCAT(DISTINCT pi.roster_id) as roster_ids_csv,
+                    GROUP_CONCAT(DISTINCT pi.event_id) as event_ids_csv
                 from photo
                 left join photo_intersection pi on pi.photo_id = photo.id
                 left join team t on t.id = pi.team_id
@@ -230,44 +239,104 @@ const RESOURCES = {
                 sql += ` where photo.photo_url like ? or t.team_name like ? or r.player_name like ?`;
                 params.push(`%${search}%`, `%${search}%`, `%${search}%`);
             }
-            sql += ` order by photo.id desc`;
-            return query(sql, params);
+            sql += ` group by photo.id order by photo.id desc`;
+            const rows = await query(sql, params);
+            return rows.map((row) => ({
+                ...row,
+                roster_ids: parseIdList(row.roster_ids_csv),
+                team_id: parseIdList(row.team_ids_csv)[0] ?? null,
+                event_id: parseIdList(row.event_ids_csv)[0] ?? null,
+            }));
         },
 
         async create(body) {
             const rows = await query('insert into photo (photo_url) values (?)', [toNull(body.photo_url)]);
             const photoId = rows.insertId;
-            const teamId = toNull(body.team_id);
-            const rosterId = toNull(body.roster_id);
-            const eventId = toNull(body.event_id);
-            if (teamId || rosterId || eventId) {
-                await query(
-                    'insert into photo_intersection (photo_id, team_id, roster_id, event_id) values (?, ?, ?, ?)',
-                    [photoId, teamId, rosterId, eventId]
-                );
-            }
+            await tagPhoto(photoId, body);
             return photoId;
         },
 
         async update(id, body) {
             await query('update photo set photo_url = ? where id = ?', [toNull(body.photo_url), id]);
             await query('delete from photo_intersection where photo_id = ?', [id]);
-            const teamId = toNull(body.team_id);
-            const rosterId = toNull(body.roster_id);
-            const eventId = toNull(body.event_id);
-            if (teamId || rosterId || eventId) {
-                await query(
-                    'insert into photo_intersection (photo_id, team_id, roster_id, event_id) values (?, ?, ?, ?)',
-                    [id, teamId, rosterId, eventId]
-                );
-            }
+            await tagPhoto(id, body);
         },
 
         async remove(id) {
             await query('delete from photo where id = ?', [id]);
         },
     },
+
+    // Review queue for face-recognition candidates from bulk photo uploads that weren't confident
+    // enough to auto-tag (see app/api/rekognition/bulkUploadPhotos) -- surfaced in the admin Face
+    // Review tab. Reuses the generic confirmField/confirmValue/rejectValue Confirm/Reject buttons,
+    // but needs a custom update() since confirming has a side effect (inserting into
+    // photo_intersection) that the generic PUT-one-field mechanism doesn't do on its own.
+    photoFaceMatches: {
+        table: 'photo_face_match',
+        pk: 'id',
+        required: [],
+
+        async list(search) {
+            let sql = `select pfm.id, pfm.photo_id, photo.photo_url, pfm.roster_id, r.player_name,
+                    pfm.similarity, pfm.match_status, pfm.created_at
+                from photo_face_match pfm
+                join photo on photo.id = pfm.photo_id
+                left join roster r on r.id = pfm.roster_id`;
+            const params = [];
+            if (search) {
+                sql += ` where r.player_name like ?`;
+                params.push(`%${search}%`);
+            }
+            sql += ` order by (pfm.match_status = 'pending') desc, pfm.created_at desc`;
+            return query(sql, params);
+        },
+
+        async update(id, body) {
+            const rosterId = toNull(body.roster_id);
+            const matchStatus = body.match_status;
+            await query('update photo_face_match set roster_id = ?, match_status = ? where id = ?', [rosterId, matchStatus, id]);
+
+            if (matchStatus === 'club_confirmed' && rosterId) {
+                const rows = await query('select photo_id from photo_face_match where id = ?', [id]);
+                const photoId = rows[0]?.photo_id;
+                // Guard against a duplicate photo_intersection row if Confirm is clicked twice
+                // (e.g. a retried request) -- check before inserting rather than relying on a
+                // unique constraint that doesn't exist on this table.
+                const existing = await query(
+                    'select id from photo_intersection where photo_id = ? and roster_id = ?',
+                    [photoId, rosterId]
+                );
+                if (existing.length === 0) {
+                    await query('insert into photo_intersection (photo_id, roster_id) values (?, ?)', [photoId, rosterId]);
+                }
+            }
+        },
+
+        async remove(id) {
+            await query('delete from photo_face_match where id = ?', [id]);
+        },
+    },
 };
+
+async function tagPhoto(photoId, body) {
+    const teamId = toNull(body.team_id);
+    const eventId = toNull(body.event_id);
+    const rosterIds = Array.isArray(body.roster_ids) ? body.roster_ids : [];
+    if (rosterIds.length > 0) {
+        for (const rosterId of rosterIds) {
+            await query(
+                'insert into photo_intersection (photo_id, team_id, roster_id, event_id) values (?, ?, ?, ?)',
+                [photoId, teamId, rosterId, eventId]
+            );
+        }
+    } else if (teamId || eventId) {
+        await query(
+            'insert into photo_intersection (photo_id, team_id, roster_id, event_id) values (?, ?, ?, ?)',
+            [photoId, teamId, null, eventId]
+        );
+    }
+}
 
 async function listRows(resourceKey, search) {
     const resource = RESOURCES[resourceKey];
