@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+function highlightNTXW(segment) {
+    return segment
+        .split(/(NTXW)/g)
+        .map((piece, i) => (piece === 'NTXW' ? <span key={i} className="text-roseRed">{piece}</span> : piece));
+}
+
 function renderEventText(text) {
     const regex = /\(([^)]+)\)/g;
     const parts = [];
@@ -14,7 +20,7 @@ function renderEventText(text) {
         const looksLikeAddress = /\d/.test(address);
 
         if (match.index > lastIndex) {
-            parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
+            parts.push(<span key={key++}>{highlightNTXW(text.slice(lastIndex, match.index))}</span>);
         }
 
         if (looksLikeAddress) {
@@ -30,14 +36,14 @@ function renderEventText(text) {
                 </a>
             );
         } else {
-            parts.push(<span key={key++}>({address})</span>);
+            parts.push(<span key={key++}>({highlightNTXW(address)})</span>);
         }
 
         lastIndex = regex.lastIndex;
     }
 
     if (lastIndex < text.length) {
-        parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
+        parts.push(<span key={key++}>{highlightNTXW(text.slice(lastIndex))}</span>);
     }
 
     return parts;
