@@ -76,7 +76,7 @@ export default function Nationals() {
     return (
         <div>
             <h1 className="inline-block text-3xl font-bold text-myrtleGreen justify-center px-3 py-2 mt-2 mb-2">
-                <strong>{itinerary?.title || 'USAFL Nationals Itinerary'}</strong>
+                <strong>USAFL Nationals</strong>
             </h1>
 
             <div className="w-full flex justify-center px-2">
