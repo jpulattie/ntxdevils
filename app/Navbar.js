@@ -181,8 +181,8 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-2 rounded-xl">
-                    <Link href="./nationals" >
-                        Nationals
+                    <Link href="./awardsNight" >
+                        Awards Night
                     </Link>
                 </div>
 
@@ -338,8 +338,8 @@ export default function Navbar() {
                         </Link>
                     </div>
                     <div className="w-fit text-white bg-myrtleGreen hover:bg-primroseYellow hover:text-myrtleGreen py-2 px-2 rounded-xl">
-                        <Link href="./nationals" >
-                            Nationals
+                        <Link href="./awardsNight" >
+                            Awards Night
                         </Link>
                     </div>
 
